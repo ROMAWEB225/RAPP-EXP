@@ -1,1159 +1,874 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Suivi des Rapports d'Expertise - United Motors</title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Rapports d'Expertise - HR & UM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-      :root {
-        --primary-color: #2c3e50;
-        --secondary-color: #34495e;
-        --accent-color: #e67e22;
-        --bg-color: #f4f7f6;
-        --text-color: #333;
-        --border-color: #ddd;
-        --success-color: #27ae60;
-        --warning-color: #f39c12;
-        --danger-color: #e74c3c;
-      }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e67e22;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --border-color: #ddd;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --hr-color: #2980b9;
+            --um-color: #8e44ad;
+        }
 
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        margin: 0;
-        padding: 20px;
-      }
-
-      h1,
-      h2,
-      h3 {
-        color: var(--primary-color);
-        margin-bottom: 10px;
-      }
-
-      .container {
-        max-width: 1800px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Tableau de bord */
-      .dashboard {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 15px;
-        margin-bottom: 25px;
-        padding: 15px;
-        background: #ecf0f1;
-        border-radius: 8px;
-      }
-
-      .stat-card {
-        background: white;
-        padding: 15px;
-        border-radius: 6px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        border-left: 5px solid var(--accent-color);
-      }
-
-      .stat-card h4 {
-        margin: 0;
-        font-size: 0.85em;
-        color: #7f8c8d;
-        text-transform: uppercase;
-      }
-      .stat-card p {
-        margin: 5px 0 0;
-        font-size: 1.3em;
-        font-weight: bold;
-        color: var(--primary-color);
-      }
-
-      /* Barre d'outils */
-      .toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 20px;
-        align-items: center;
-      }
-
-      .toolbar input,
-      .toolbar select {
-        padding: 8px 12px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        font-size: 14px;
-      }
-
-      .toolbar input[type="text"] {
-        flex-grow: 1;
-        min-width: 200px;
-      }
-
-      button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 14px;
-      }
-
-      .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-      }
-      .btn-primary:hover {
-        background-color: var(--secondary-color);
-      }
-      .btn-success {
-        background-color: var(--success-color);
-        color: white;
-      }
-      .btn-success:hover {
-        background-color: #219150;
-      }
-      .btn-warning {
-        background-color: var(--warning-color);
-        color: white;
-      }
-      .btn-warning:hover {
-        background-color: #d35400;
-      }
-      .btn-danger {
-        background-color: var(--danger-color);
-        color: white;
-      }
-      .btn-danger:hover {
-        background-color: #c0392b;
-      }
-      .btn-info {
-        background-color: #3498db;
-        color: white;
-      }
-      .btn-info:hover {
-        background-color: #2980b9;
-      }
-      .btn-sm {
-        padding: 5px 8px;
-        font-size: 12px;
-      }
-
-      /* Module de Reporting */
-      .reporting-section {
-        background: #fff;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 25px;
-        border-top: 5px solid var(--primary-color);
-      }
-
-      .reporting-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: flex-end;
-        margin-bottom: 15px;
-      }
-
-      .reporting-filters .form-group {
-        margin: 0;
-      }
-
-      .reporting-results {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px dashed var(--border-color);
-      }
-
-      .reporting-card {
-        background: #fdfdfd;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #eee;
-        text-align: center;
-      }
-
-      .reporting-card h5 {
-        margin: 0 0 5px 0;
-        font-size: 0.8em;
-        color: #7f8c8d;
-      }
-      .reporting-card p {
-        margin: 0;
-        font-size: 1.2em;
-        font-weight: bold;
-        color: var(--primary-color);
-      }
-
-      /* Tableau */
-      .table-responsive {
-        overflow-x: auto;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-        white-space: nowrap;
-      }
-      th,
-      td {
-        padding: 10px 8px;
-        text-align: left;
-        border-bottom: 1px solid var(--border-color);
-      }
-      th {
-        background-color: var(--primary-color);
-        color: white;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 11px;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
-      tr:hover {
-        background-color: #f1f1f1;
-      }
-
-      /* Alertes Couleurs */
-      tr.alerte-rouge {
-        background-color: #fadbd8 !important;
-      }
-      tr.alerte-rouge td {
-        color: #922b21;
-        font-weight: bold;
-      }
-      tr.alerte-orange {
-        background-color: #fdebd0 !important;
-      }
-      tr.alerte-orange td {
-        color: #9c640c;
-      }
-
-      /* Badges de statut */
-      .status-badge {
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-      .status-attente {
-        background-color: #fef9e7;
-        color: #f39c12;
-        border: 1px solid #f39c12;
-      }
-      .status-cours {
-        background-color: #e8f4fd;
-        color: #2980b9;
-        border: 1px solid #2980b9;
-      }
-      .status-valide {
-        background-color: #eafaf1;
-        color: #27ae60;
-        border: 1px solid #27ae60;
-      }
-
-      /* Modal */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        overflow-y: auto;
-      }
-      .modal-content {
-        background-color: white;
-        margin: 30px auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 800px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      }
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 15px;
-      }
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-      }
-      .form-group label {
-        margin-bottom: 5px;
-        font-weight: 600;
-        font-size: 13px;
-        color: var(--secondary-color);
-      }
-      .form-group input,
-      .form-group select {
-        padding: 8px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        font-size: 14px;
-      }
-      .modal-actions {
-        margin-top: 20px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-      }
-
-      .actions-cell {
-        display: flex;
-        gap: 5px;
-      }
-
-      /* Styles d'impression */
-      @media print {
         body {
-          background: white;
-          padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
         }
+
+        h1, h2, h3 { color: var(--primary-color); margin-bottom: 10px; }
+
         .container {
-          box-shadow: none;
-          padding: 0;
-          max-width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .toolbar,
-        .actions-cell,
-        .modal,
-        .btn-primary,
-        .btn-success,
-        .btn-warning,
-        .btn-danger,
-        .btn-info,
-        .reporting-filters {
-          display: none !important;
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
         }
+
+        .service-selector {
+            display: flex;
+            gap: 10px;
+            background: #ecf0f1;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .service-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: transparent;
+            color: #7f8c8d;
+        }
+
+        .service-btn.active-hr { background: var(--hr-color); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .service-btn.active-um { background: var(--um-color); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        .save-indicator {
+            font-size: 12px;
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .save-indicator.visible { opacity: 1; }
+
         .dashboard {
-          background: white;
-          border: 1px solid #ccc;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
         }
+
         .stat-card {
-          border: 1px solid #ccc;
-          box-shadow: none;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent-color);
         }
-        .table-responsive {
-          overflow: visible;
-          border: none;
-        }
-        table {
-          font-size: 10px;
-          width: 100%;
-        }
-        th,
-        td {
-          padding: 4px;
-          border: 1px solid #000;
-        }
-        th {
-          background-color: #ddd !important;
-          color: #000 !important;
-          -webkit-print-color-adjust: exact;
-        }
-        tr.alerte-rouge {
-          background-color: #fadbd8 !important;
-          -webkit-print-color-adjust: exact;
-        }
-        tr.alerte-orange {
-          background-color: #fdebd0 !important;
-          -webkit-print-color-adjust: exact;
-        }
-        .status-badge {
-          border: 1px solid #000;
-        }
-      }
 
-      @media (max-width: 768px) {
+        .stat-card h4 { margin: 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
+        .stat-card p { margin: 5px 0 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
+
+        /* Module d'Analyse par Statut */
+        .reporting-section {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-top: 5px solid var(--success-color);
+        }
+
+        .reporting-section h3 { margin-top: 0; }
+
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .quick-btn {
+            padding: 8px 15px;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover, .quick-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .quick-btn.valide-btn { border-color: var(--success-color); color: var(--success-color); }
+        .quick-btn.valide-btn:hover, .quick-btn.valide-btn.active { background: var(--success-color); color: white; }
+
+        .reporting-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .reporting-filters .form-group { margin: 0; min-width: 200px; }
+        
+        .reporting-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .reporting-card {
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            text-align: center;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .reporting-card.total { border-left-color: var(--primary-color); background: #ecf0f1; }
+        .reporting-card.rapport { border-left-color: #3498db; }
+        .reporting-card.valide { border-left-color: var(--success-color); background: #eafaf1; }
+        .reporting-card.devis { border-left-color: #9b59b6; background: #f4ecf7; }
+
+        .reporting-card h5 { margin: 0 0 5px 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
+        .reporting-card p { margin: 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
+
+        /* Barre d'outils */
         .toolbar {
-          flex-direction: column;
-          align-items: stretch;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
         }
-        .form-grid {
-          grid-template-columns: 1fr;
+
+        .toolbar input, .toolbar select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
         }
-      }
+
+        .toolbar input[type="text"] { flex-grow: 1; min-width: 200px; }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--secondary-color); }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover { background-color: #219150; }
+        .btn-warning { background-color: var(--warning-color); color: white; }
+        .btn-warning:hover { background-color: #d35400; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-info { background-color: #3498db; color: white; }
+        .btn-info:hover { background-color: #2980b9; }
+        .btn-sm { padding: 5px 8px; font-size: 12px; }
+
+        /* Tableau */
+        .table-responsive { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+        th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background-color: var(--primary-color); color: white; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
+        tr:hover { background-color: #f1f1f1; }
+
+        tr.alerte-rouge { background-color: #fadbd8 !important; }
+        tr.alerte-rouge td { color: #922b21; font-weight: bold; }
+        tr.alerte-orange { background-color: #fdebd0 !important; }
+        tr.alerte-orange td { color: #9c640c; }
+
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .status-attente { background-color: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
+        .status-cours { background-color: #e8f4fd; color: #2980b9; border: 1px solid #2980b9; }
+        .status-valide { background-color: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto; }
+        .modal-content { background-color: white; margin: 30px auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 10px; }
+        .form-group label { margin-bottom: 5px; font-weight: 600; font-size: 13px; color: var(--secondary-color); }
+        .form-group input, .form-group select { padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; }
+        .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+
+        .actions-cell { display: flex; gap: 5px; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            .toolbar, .actions-cell, .modal, .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-info, .reporting-filters, .service-selector, .save-indicator, .quick-buttons { display: none !important; }
+            .dashboard { background: white; border: 1px solid #ccc; }
+            .stat-card { border: 1px solid #ccc; box-shadow: none; }
+            .table-responsive { overflow: visible; border: none; }
+            table { font-size: 10px; width: 100%; }
+            th, td { padding: 4px; border: 1px solid #000; }
+            th { background-color: #ddd !important; color: #000 !important; -webkit-print-color-adjust: exact; }
+            tr.alerte-rouge { background-color: #fadbd8 !important; -webkit-print-color-adjust: exact; }
+            tr.alerte-orange { background-color: #fdebd0 !important; -webkit-print-color-adjust: exact; }
+            .status-badge { border: 1px solid #000; }
+        }
+
+        @media (max-width: 768px) {
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .form-grid { grid-template-columns: 1fr; }
+            .header-top { flex-direction: column; gap: 10px; }
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>
-        <i class="fas fa-clipboard-list"></i> Suivi des Rapports d'Expertise -
-        United Motors
-      </h1>
+</head>
+<body>
 
-      <!-- Tableau de bord Global -->
-      <div class="dashboard">
-        <div class="stat-card">
-          <h4>Total Dossiers</h4>
-          <p id="totalDossiers">0</p>
+<div class="container">
+    <div class="header-top">
+        <div style="display:flex; align-items:center;">
+            <h1><i class="fas fa-clipboard-list"></i> Suivi des Rapports d'Expertise</h1>
+            <div id="saveIndicator" class="save-indicator"><i class="fas fa-check-circle"></i> Sauvegardé</div>
         </div>
-        <div class="stat-card" style="border-left-color: var(--warning-color)">
-          <h4>En Attente</h4>
-          <p id="totalAttente">0</p>
+        <div class="service-selector">
+            <button id="btnHR" class="service-btn active-hr" onclick="changerService('HR')">Service HR</button>
+            <button id="btnUM" class="service-btn" onclick="changerService('UM')">Service UM</button>
         </div>
-        <div class="stat-card" style="border-left-color: var(--success-color)">
-          <h4>Validés</h4>
-          <p id="totalValides">0</p>
-        </div>
-        <div class="stat-card">
-          <h4>Montant Total Rapports</h4>
-          <p id="montantTotal">0 FCFA</p>
-        </div>
-        <div class="stat-card" style="border-left-color: #9b59b6">
-          <h4>Montant Total Devis</h4>
-          <p id="montantDevisTotal">0 FCFA</p>
-        </div>
-      </div>
-
-      <!-- Module de Reporting par Période -->
-      <div class="reporting-section">
-        <h3><i class="fas fa-chart-line"></i> Analyse par Période</h3>
-        <div class="reporting-filters">
-          <div class="form-group">
-            <label>Date de début</label>
-            <input type="date" id="dateDebut" />
-          </div>
-          <div class="form-group">
-            <label>Date de fin</label>
-            <input type="date" id="dateFin" />
-          </div>
-          <button class="btn-info" onclick="calculerPeriode()">
-            <i class="fas fa-calculator"></i> Calculer
-          </button>
-          <button
-            class="btn-secondary"
-            style="background: #95a5a6; color: white"
-            onclick="resetPeriode()"
-          >
-            <i class="fas fa-undo"></i> Réinitialiser
-          </button>
-        </div>
-
-        <div
-          class="reporting-results"
-          id="reportingResults"
-          style="display: none"
-        >
-          <div class="reporting-card">
-            <h5>Dossiers sur la période</h5>
-            <p id="repNbDossiers">0</p>
-          </div>
-          <div class="reporting-card">
-            <h5>Montant Rapports</h5>
-            <p id="repMontantRapport">0 FCFA</p>
-          </div>
-          <div class="reporting-card">
-            <h5>Montant Validés</h5>
-            <p id="repMontantValide">0 FCFA</p>
-          </div>
-          <div class="reporting-card">
-            <h5>Montant Devis</h5>
-            <p id="repMontantDevis">0 FCFA</p>
-          </div>
-        </div>
-
-        <!-- Répartition par période -->
-        <div id="repartitionContainer" style="display: none; margin-top: 20px">
-          <h4>Répartition</h4>
-          <div style="display: flex; gap: 20px; flex-wrap: wrap">
-            <div style="flex: 1; min-width: 250px">
-              <h5>Par Mois</h5>
-              <ul
-                id="listeMois"
-                style="list-style: none; padding: 0; font-size: 13px"
-              ></ul>
-            </div>
-            <div style="flex: 1; min-width: 250px">
-              <h5>Par Semaine</h5>
-              <ul
-                id="listeSemaines"
-                style="list-style: none; padding: 0; font-size: 13px"
-              ></ul>
-            </div>
-            <div style="flex: 1; min-width: 250px">
-              <h5>Par Année</h5>
-              <ul
-                id="listeAnnees"
-                style="list-style: none; padding: 0; font-size: 13px"
-              ></ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Barre d'outils -->
-      <div class="toolbar">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="🔍 Rechercher (Immat, Client, Cabinet, Sinistre...)"
-        />
-        <select id="filterStatut">
-          <option value="">Tous les statuts</option>
-          <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
-          <option value="EN COURS TRAX">En cours TRAX</option>
-          <option value="EN ATTENTE DE RAPPORT VALIDE">
-            En attente de rapport validé
-          </option>
-          <option value="VALIDE">Validé</option>
-        </select>
-        <button class="btn-primary" onclick="openModal()">
-          <i class="fas fa-plus"></i> Nouveau
-        </button>
-        <button class="btn-success" onclick="exportCSV()">
-          <i class="fas fa-file-excel"></i> Exporter
-        </button>
-        <button
-          class="btn-warning"
-          onclick="document.getElementById('importFile').click()"
-        >
-          <i class="fas fa-file-import"></i> Importer
-        </button>
-        <input
-          type="file"
-          id="importFile"
-          style="display: none"
-          accept=".csv"
-          onchange="importCSV(event)"
-        />
-        <button class="btn-info" onclick="window.print()">
-          <i class="fas fa-print"></i> Imprimer
-        </button>
-        <button class="btn-danger" onclick="clearAll()">
-          <i class="fas fa-trash"></i> Tout Effacer
-        </button>
-      </div>
-
-      <!-- Tableau -->
-      <div class="table-responsive">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>NB</th>
-              <th>Assuré</th>
-              <th>Véhicule</th>
-              <th>Type</th>
-              <th>Immatriculation</th>
-              <th>Sinistre</th>
-              <th>Assureur</th>
-              <th>Photo AVT TX</th>
-              <th>Photo AP TX</th>
-              <th>Date</th>
-              <th>Livraison</th>
-              <th>Cabinet</th>
-              <th>Montant Rapport</th>
-              <th>Rapport Validé</th>
-              <th>Montant Rapport Validé</th>
-              <th>Montant Devis</th>
-              <th>Commentaire</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
+    </div>
+    
+    <div class="dashboard">
+        <div class="stat-card"><h4>Total Dossiers</h4><p id="totalDossiers">0</p></div>
+        <div class="stat-card" style="border-left-color: var(--warning-color);"><h4>En Attente</h4><p id="totalAttente">0</p></div>
+        <div class="stat-card" style="border-left-color: var(--success-color);"><h4>Validés</h4><p id="totalValides">0</p></div>
+        <div class="stat-card"><h4>Montant Total Rapports</h4><p id="montantTotal">0 FCFA</p></div>
+        <div class="stat-card" style="border-left-color: #9b59b6;"><h4>Montant Total Devis</h4><p id="montantDevisTotal">0 FCFA</p></div>
     </div>
 
-    <!-- Modal -->
-    <div id="modal" class="modal">
-      <div class="modal-content">
+    <!-- Module d'Analyse par Statut (NOUVEAU) -->
+    <div class="reporting-section">
+        <h3><i class="fas fa-calculator"></i> Analyse des Montants par Statut</h3>
+        <p style="font-size: 13px; color: #7f8c8d; margin: 0 0 15px 0;">
+            Sélectionnez un statut pour voir les totaux correspondants, ou utilisez les raccourcis ci-dessous.
+        </p>
+
+        <!-- Raccourcis rapides -->
+        <div class="quick-buttons">
+            <button class="quick-btn valide-btn" onclick="analyseRapide('RAPPORT VALIDE')">
+                <i class="fas fa-check-circle"></i> Tous les Rapports Validés
+            </button>
+            <button class="quick-btn" onclick="analyseRapide('EN ATTENTE DE RAPPORT')">
+                <i class="fas fa-clock"></i> Tous En Attente
+            </button>
+            <button class="quick-btn" onclick="analyseRapide('EN COURS TRAX')">
+                <i class="fas fa-spinner"></i> Tous En Cours TRAX
+            </button>
+            <button class="quick-btn" onclick="analyseRapide('')">
+                <i class="fas fa-list"></i> Tous les dossiers
+            </button>
+        </div>
+
+        <!-- Filtres avancés -->
+        <div class="reporting-filters">
+            <div class="form-group">
+                <label>Statut</label>
+                <select id="filtreStatutAnalyse">
+                    <option value="">-- Tous les statuts --</option>
+                    <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+                    <option value="EN COURS TRAX">EN COURS TRAX</option>
+                    <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Filtrer par Expert</label>
+                <select id="filtreExpert">
+                    <option value="">-- Tous les experts --</option>
+                    <option value="PARACLET">PARACLET</option>
+                    <option value="BCA">BCA</option>
+                    <option value="AS AMON">AS AMON</option>
+                    <option value="ATLANTIQUE ASSURANCES">ATLANTIQUE ASSURANCES</option>
+                    <option value="NID">NID</option>
+                    <option value="LCA">LCA</option>
+                    <option value="SAAR ASSURANCES">SAAR ASSURANCES</option>
+                    <option value="SGA">SGA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Date début (optionnel)</label>
+                <input type="date" id="dateDebut">
+            </div>
+            <div class="form-group">
+                <label>Date fin (optionnel)</label>
+                <input type="date" id="dateFin">
+            </div>
+            <button class="btn-info" onclick="calculerAnalyse()"><i class="fas fa-calculator"></i> Calculer</button>
+            <button style="background:#95a5a6; color:white;" onclick="resetAnalyse()"><i class="fas fa-undo"></i> Réinitialiser</button>
+        </div>
+        
+        <!-- Résultats de l'analyse -->
+        <div class="reporting-results" id="reportingResults" style="display:none;">
+            <div class="reporting-card total">
+                <h5>Dossiers trouvés</h5>
+                <p id="repNbDossiers">0</p>
+            </div>
+            <div class="reporting-card rapport">
+                <h5>Total Montant Rapports</h5>
+                <p id="repMontantRapport">0 FCFA</p>
+            </div>
+            <div class="reporting-card valide">
+                <h5>Total Montant Rapports Validés</h5>
+                <p id="repMontantValide">0 FCFA</p>
+            </div>
+            <div class="reporting-card devis">
+                <h5>Total Montant Devis</h5>
+                <p id="repMontantDevis">0 FCFA</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher (Immat, Client, Sinistre...)">
+        <select id="filterStatut">
+            <option value="">Tous les statuts</option>
+            <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
+            <option value="EN COURS TRAX">En cours TRAX</option>
+            <option value="RAPPORT VALIDE">Rapport Validé</option>
+        </select>
+        <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Nouveau</button>
+        <button class="btn-success" onclick="exportCSV()"><i class="fas fa-file-excel"></i> Exporter</button>
+        <button class="btn-warning" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Importer</button>
+        <input type="file" id="importFile" style="display: none;" accept=".csv" onchange="importCSV(event)">
+        <button class="btn-info" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
+        <button class="btn-danger" onclick="clearAll()"><i class="fas fa-trash"></i> Vider le service</button>
+    </div>
+
+    <div class="table-responsive">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>NB</th>
+                    <th>Assuré</th>
+                    <th>Véhicule</th>
+                    <th>Type</th>
+                    <th>Immatriculation</th>
+                    <th>Sinistre</th>
+                    <th>Assureur</th>
+                    <th>Photo AVT TX</th>
+                    <th>Photo AP TX</th>
+                    <th>Date</th>
+                    <th>Livraison</th>
+                    <th>Expert</th>
+                    <th>Montant Rapport</th>
+                    <th>Rapport Validé</th>
+                    <th>Montant Rapport Validé</th>
+                    <th>Montant Devis</th>
+                    <th>Commentaire</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+    <div class="modal-content">
         <h2 id="modalTitle">Ajouter un dossier</h2>
         <form id="dossierForm">
-          <input type="hidden" id="editIndex" value="-1" />
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Assuré</label><input type="text" id="assure" required />
+            <input type="hidden" id="editIndex" value="-1">
+            <div class="form-grid">
+                <div class="form-group"><label>Assuré</label><input type="text" id="assure" required></div>
+                <div class="form-group"><label>Véhicule</label><input type="text" id="vehicule"></div>
+                <div class="form-group"><label>Type</label><input type="text" id="type"></div>
+                <div class="form-group"><label>Immatriculation</label><input type="text" id="immat"></div>
+                <div class="form-group"><label>Sinistre</label><input type="text" id="sinistre"></div>
+                <div class="form-group"><label>Assureur</label><input type="text" id="assureur"></div>
+                <div class="form-group"><label>Photo AVT TX</label><input type="date" id="photoAvt"></div>
+                <div class="form-group"><label>Photo AP TX</label><input type="date" id="photoAp"></div>
+                <div class="form-group"><label>Date</label><input type="date" id="date"></div>
+                <div class="form-group"><label>Livraison</label><input type="date" id="livraison"></div>
+                <div class="form-group"><label>Expert (Cabinet)</label>
+                    <select id="cabinet">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="PARACLET">PARACLET</option>
+                        <option value="BCA">BCA</option>
+                        <option value="AS AMON">AS AMON</option>
+                        <option value="ATLANTIQUE ASSURANCES">ATLANTIQUE ASSURANCES</option>
+                        <option value="NID">NID</option>
+                        <option value="LCA">LCA</option>
+                        <option value="SAAR ASSURANCES">SAAR ASSURANCES</option>
+                        <option value="SGA">SGA</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Montant Rapport (FCFA)</label><input type="number" id="montantRapport" value="0"></div>
+                <div class="form-group"><label>Rapport Validé ?</label>
+                    <select id="rapportValide"><option value="Non">Non</option><option value="Oui">Oui</option></select>
+                </div>
+                <div class="form-group"><label>Montant Rapport Validé (FCFA)</label><input type="number" id="montantValide" value="0"></div>
+                <div class="form-group"><label>Montant Devis (FCFA)</label><input type="number" id="montantDevis" value="0"></div>
+                <div class="form-group"><label>Commentaire</label><input type="text" id="commentaire"></div>
+                <div class="form-group"><label>Statut</label>
+                    <select id="statut">
+                        <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+                        <option value="EN COURS TRAX">EN COURS TRAX</option>
+                        <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-              <label>Véhicule</label><input type="text" id="vehicule" />
+            <div class="modal-actions">
+                <button type="button" class="btn-danger" onclick="closeModal()">Annuler</button>
+                <button type="submit" class="btn-primary">Enregistrer</button>
             </div>
-            <div class="form-group">
-              <label>Type</label><input type="text" id="type" />
-            </div>
-            <div class="form-group">
-              <label>Immatriculation</label><input type="text" id="immat" />
-            </div>
-            <div class="form-group">
-              <label>Sinistre</label><input type="text" id="sinistre" />
-            </div>
-            <div class="form-group">
-              <label>Assureur</label><input type="text" id="assureur" />
-            </div>
-            <div class="form-group">
-              <label>Photo AVT TX</label><input type="date" id="photoAvt" />
-            </div>
-            <div class="form-group">
-              <label>Photo AP TX</label><input type="date" id="photoAp" />
-            </div>
-            <div class="form-group">
-              <label>Date</label><input type="date" id="date" />
-            </div>
-            <div class="form-group">
-              <label>Livraison</label><input type="date" id="livraison" />
-            </div>
-            <div class="form-group">
-              <label>Cabinet</label><input type="text" id="cabinet" />
-            </div>
-            <div class="form-group">
-              <label>Montant Rapport (FCFA)</label
-              ><input type="number" id="montantRapport" value="0" />
-            </div>
-            <div class="form-group">
-              <label>Rapport Validé ?</label>
-              <select id="rapportValide">
-                <option value="Non">Non</option>
-                <option value="Oui">Oui</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Montant Rapport Validé (FCFA)</label
-              ><input type="number" id="montantValide" value="0" />
-            </div>
-            <div class="form-group">
-              <label>Montant Devis (FCFA)</label
-              ><input type="number" id="montantDevis" value="0" />
-            </div>
-            <div class="form-group">
-              <label>Commentaire</label><input type="text" id="commentaire" />
-            </div>
-            <div class="form-group">
-              <label>Statut</label>
-              <select id="statut">
-                <option value="EN ATTENTE DE RAPPORT">
-                  EN ATTENTE DE RAPPORT
-                </option>
-                <option value="EN COURS TRAX">EN COURS TRAX</option>
-                <option value="EN ATTENTE DE RAPPORT VALIDE">
-                  EN ATTENTE DE RAPPORT VALIDE
-                </option>
-                <option value="VALIDE">VALIDE</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-actions">
-            <button type="button" class="btn-danger" onclick="closeModal()">
-              Annuler
-            </button>
-            <button type="submit" class="btn-primary">Enregistrer</button>
-          </div>
         </form>
-      </div>
     </div>
+</div>
 
-    <script>
-      let dossiers =
-        JSON.parse(localStorage.getItem("dossiersExpertise")) || [];
+<script>
+    let serviceActif = 'HR';
 
-      document.addEventListener("DOMContentLoaded", () => {
+    function chargerDonnees() {
+        const key = `dossiersExpertise_${serviceActif}`;
+        const data = JSON.parse(localStorage.getItem(key)) || [];
+        let besoinSauvegarde = false;
+        data.forEach(d => {
+            if (!d.id) { d.id = genererID(); besoinSauvegarde = true; }
+        });
+        if (besoinSauvegarde) sauvegarderDonnees(data);
+        return data;
+    }
+
+    function sauvegarderDonnees(data) {
+        const key = `dossiersExpertise_${serviceActif}`;
+        localStorage.setItem(key, JSON.stringify(data));
+        afficherIndicateurSauvegarde();
+    }
+
+    function afficherIndicateurSauvegarde() {
+        const indicator = document.getElementById('saveIndicator');
+        indicator.classList.add('visible');
+        setTimeout(() => indicator.classList.remove('visible'), 1500);
+    }
+
+    function genererID() {
+        return `${serviceActif}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+
+    let dossiers = chargerDonnees();
+
+    function changerService(service) {
+        serviceActif = service;
+        document.getElementById('btnHR').className = 'service-btn' + (service === 'HR' ? ' active-hr' : '');
+        document.getElementById('btnUM').className = 'service-btn' + (service === 'UM' ? ' active-um' : '');
+        dossiers = chargerDonnees();
         renderTable();
         updateDashboard();
-      });
+        resetAnalyse();
+    }
 
-      // --- CRUD ---
-      function openModal() {
-        document.getElementById("modalTitle").textContent =
-          "Ajouter un dossier";
-        document.getElementById("dossierForm").reset();
-        document.getElementById("editIndex").value = "-1";
-        document.getElementById("date").valueAsDate = new Date(); // Date du jour par défaut
-        document.getElementById("modal").style.display = "block";
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTable();
+        updateDashboard();
+    });
 
-      function closeModal() {
-        document.getElementById("modal").style.display = "none";
-      }
+    // --- CRUD ---
+    function openModal() {
+        document.getElementById('modalTitle').textContent = `Ajouter un dossier (${serviceActif})`;
+        document.getElementById('dossierForm').reset();
+        document.getElementById('editIndex').value = '-1';
+        document.getElementById('date').valueAsDate = new Date();
+        document.getElementById('modal').style.display = 'block';
+    }
 
-      document
-        .getElementById("dossierForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          const index = document.getElementById("editIndex").value;
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-          const dossier = {
-            assure: document.getElementById("assure").value,
-            vehicule: document.getElementById("vehicule").value,
-            type: document.getElementById("type").value,
-            immat: document.getElementById("immat").value,
-            sinistre: document.getElementById("sinistre").value,
-            assureur: document.getElementById("assureur").value,
-            photoAvt: document.getElementById("photoAvt").value,
-            photoAp: document.getElementById("photoAp").value,
-            date: document.getElementById("date").value,
-            livraison: document.getElementById("livraison").value,
-            cabinet: document.getElementById("cabinet").value,
-            montantRapport:
-              parseFloat(document.getElementById("montantRapport").value) || 0,
-            rapportValide: document.getElementById("rapportValide").value,
-            montantValide:
-              parseFloat(document.getElementById("montantValide").value) || 0,
-            montantDevis:
-              parseFloat(document.getElementById("montantDevis").value) || 0,
-            commentaire: document.getElementById("commentaire").value,
-            statut: document.getElementById("statut").value,
-          };
+    document.getElementById('dossierForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const index = document.getElementById('editIndex').value;
+        
+        const dossier = {
+            id: index === '-1' ? genererID() : dossiers[index].id,
+            assure: document.getElementById('assure').value,
+            vehicule: document.getElementById('vehicule').value,
+            type: document.getElementById('type').value,
+            immat: document.getElementById('immat').value,
+            sinistre: document.getElementById('sinistre').value,
+            assureur: document.getElementById('assureur').value,
+            photoAvt: document.getElementById('photoAvt').value,
+            photoAp: document.getElementById('photoAp').value,
+            date: document.getElementById('date').value,
+            livraison: document.getElementById('livraison').value,
+            cabinet: document.getElementById('cabinet').value,
+            montantRapport: parseFloat(document.getElementById('montantRapport').value) || 0,
+            rapportValide: document.getElementById('rapportValide').value,
+            montantValide: parseFloat(document.getElementById('montantValide').value) || 0,
+            montantDevis: parseFloat(document.getElementById('montantDevis').value) || 0,
+            commentaire: document.getElementById('commentaire').value,
+            statut: document.getElementById('statut').value
+        };
 
-          if (index === "-1") {
-            dossiers.push(dossier);
-          } else {
-            dossiers[index] = dossier;
-          }
+        if (index === '-1') { dossiers.push(dossier); } 
+        else { dossiers[index] = dossier; }
 
-          saveData();
-          renderTable();
-          updateDashboard();
-          closeModal();
-        });
+        sauvegarderDonnees(dossiers);
+        renderTable(); updateDashboard(); closeModal();
+    });
 
-      function editDossier(index) {
+    function editDossier(index) {
         const d = dossiers[index];
-        document.getElementById("modalTitle").textContent =
-          "Modifier le dossier";
-        document.getElementById("editIndex").value = index;
+        document.getElementById('modalTitle').textContent = `Modifier le dossier (${serviceActif})`;
+        document.getElementById('editIndex').value = index;
+        document.getElementById('assure').value = d.assure || '';
+        document.getElementById('vehicule').value = d.vehicule || '';
+        document.getElementById('type').value = d.type || '';
+        document.getElementById('immat').value = d.immat || '';
+        document.getElementById('sinistre').value = d.sinistre || '';
+        document.getElementById('assureur').value = d.assureur || '';
+        document.getElementById('photoAvt').value = d.photoAvt || '';
+        document.getElementById('photoAp').value = d.photoAp || '';
+        document.getElementById('date').value = d.date || '';
+        document.getElementById('livraison').value = d.livraison || '';
+        document.getElementById('cabinet').value = d.cabinet || '';
+        document.getElementById('montantRapport').value = d.montantRapport || 0;
+        document.getElementById('rapportValide').value = d.rapportValide || 'Non';
+        document.getElementById('montantValide').value = d.montantValide || 0;
+        document.getElementById('montantDevis').value = d.montantDevis || 0;
+        document.getElementById('commentaire').value = d.commentaire || '';
+        document.getElementById('statut').value = d.statut || 'EN ATTENTE DE RAPPORT';
+        document.getElementById('modal').style.display = 'block';
+    }
 
-        document.getElementById("assure").value = d.assure || "";
-        document.getElementById("vehicule").value = d.vehicule || "";
-        document.getElementById("type").value = d.type || "";
-        document.getElementById("immat").value = d.immat || "";
-        document.getElementById("sinistre").value = d.sinistre || "";
-        document.getElementById("assureur").value = d.assureur || "";
-        document.getElementById("photoAvt").value = d.photoAvt || "";
-        document.getElementById("photoAp").value = d.photoAp || "";
-        document.getElementById("date").value = d.date || "";
-        document.getElementById("livraison").value = d.livraison || "";
-        document.getElementById("cabinet").value = d.cabinet || "";
-        document.getElementById("montantRapport").value = d.montantRapport || 0;
-        document.getElementById("rapportValide").value =
-          d.rapportValide || "Non";
-        document.getElementById("montantValide").value = d.montantValide || 0;
-        document.getElementById("montantDevis").value = d.montantDevis || 0;
-        document.getElementById("commentaire").value = d.commentaire || "";
-        document.getElementById("statut").value =
-          d.statut || "EN ATTENTE DE RAPPORT";
-
-        document.getElementById("modal").style.display = "block";
-      }
-
-      function deleteDossier(index) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier ?")) {
-          dossiers.splice(index, 1);
-          saveData();
-          renderTable();
-          updateDashboard();
+    function deleteDossier(index) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) {
+            dossiers.splice(index, 1);
+            sauvegarderDonnees(dossiers);
+            renderTable(); updateDashboard();
         }
-      }
+    }
 
-      // --- Affichage & Alertes ---
-      function renderTable() {
-        const tbody = document.getElementById("tableBody");
-        const searchTerm = document
-          .getElementById("searchInput")
-          .value.toLowerCase();
-        const filterStatut = document.getElementById("filterStatut").value;
-        tbody.innerHTML = "";
-
+    // --- Affichage & Alertes ---
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filterStatut = document.getElementById('filterStatut').value;
+        tbody.innerHTML = '';
         const today = new Date();
 
-        const filteredDossiers = dossiers.filter((d) => {
-          const matchesSearch =
-            (d.assure || "").toLowerCase().includes(searchTerm) ||
-            (d.immat || "").toLowerCase().includes(searchTerm) ||
-            (d.cabinet || "").toLowerCase().includes(searchTerm) ||
-            (d.sinistre || "").toLowerCase().includes(searchTerm) ||
-            (d.assureur || "").toLowerCase().includes(searchTerm);
-          const matchesStatut =
-            filterStatut === "" || d.statut === filterStatut;
-          return matchesSearch && matchesStatut;
+        const filteredDossiers = dossiers.filter(d => {
+            const matchesSearch = 
+                (d.assure || '').toLowerCase().includes(searchTerm) ||
+                (d.immat || '').toLowerCase().includes(searchTerm) ||
+                (d.cabinet || '').toLowerCase().includes(searchTerm) ||
+                (d.sinistre || '').toLowerCase().includes(searchTerm) ||
+                (d.assureur || '').toLowerCase().includes(searchTerm);
+            const matchesStatut = filterStatut === '' || d.statut === filterStatut;
+            return matchesSearch && matchesStatut;
         });
 
-        filteredDossiers.forEach((d, index) => {
-          const realIndex = dossiers.indexOf(d);
-          const tr = document.createElement("tr");
-
-          // Gestion des Alertes Couleurs (Basé sur la date du dossier)
-          let alerteClass = "";
-          if (d.date) {
-            const dateDossier = new Date(d.date);
-            const diffTime = Math.abs(today - dateDossier);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            // Si le dossier est en attente depuis plus de 30 jours -> Rouge
-            if (
-              diffDays > 30 &&
-              (d.statut === "EN ATTENTE DE RAPPORT" ||
-                d.statut === "EN ATTENTE DE RAPPORT VALIDE")
-            ) {
-              alerteClass = "alerte-rouge";
+        filteredDossiers.forEach((d) => {
+            const realIndex = dossiers.indexOf(d);
+            const tr = document.createElement('tr');
+            
+            let alerteClass = '';
+            if (d.date) {
+                const dateDossier = new Date(d.date);
+                const diffTime = Math.abs(today - dateDossier);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === 'EN COURS TRAX')) {
+                    alerteClass = 'alerte-rouge';
+                } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === 'EN COURS TRAX')) {
+                    alerteClass = 'alerte-orange';
+                }
             }
-            // Si en attente entre 15 et 30 jours -> Orange
-            else if (
-              diffDays > 15 &&
-              (d.statut === "EN ATTENTE DE RAPPORT" ||
-                d.statut === "EN ATTENTE DE RAPPORT VALIDE")
-            ) {
-              alerteClass = "alerte-orange";
-            }
-          }
 
-          tr.className = alerteClass;
+            tr.className = alerteClass;
+            let statusClass = 'status-attente';
+            if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
+            if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
 
-          let statusClass = "status-attente";
-          if (d.statut === "EN COURS TRAX") statusClass = "status-cours";
-          if (d.statut === "VALIDE") statusClass = "status-valide";
-
-          tr.innerHTML = `
+            tr.innerHTML = `
                 <td>${realIndex + 1}</td>
-                <td>${d.assure || "-"}</td>
-                <td>${d.vehicule || "-"}</td>
-                <td>${d.type || "-"}</td>
-                <td><strong>${d.immat || "-"}</strong></td>
-                <td>${d.sinistre || "-"}</td>
-                <td>${d.assureur || "-"}</td>
-                <td>${d.photoAvt || "-"}</td>
-                <td>${d.photoAp || "-"}</td>
-                <td>${d.date || "-"}</td>
-                <td>${d.livraison || "-"}</td>
-                <td>${d.cabinet || "-"}</td>
+                <td>${d.assure || '-'}</td>
+                <td>${d.vehicule || '-'}</td>
+                <td>${d.type || '-'}</td>
+                <td><strong>${d.immat || '-'}</strong></td>
+                <td>${d.sinistre || '-'}</td>
+                <td>${d.assureur || '-'}</td>
+                <td>${d.photoAvt || '-'}</td>
+                <td>${d.photoAp || '-'}</td>
+                <td>${d.date || '-'}</td>
+                <td>${d.livraison || '-'}</td>
+                <td>${d.cabinet || '-'}</td>
                 <td>${formatMoney(d.montantRapport)}</td>
-                <td>${d.rapportValide || "Non"}</td>
+                <td>${d.rapportValide || 'Non'}</td>
                 <td>${formatMoney(d.montantValide)}</td>
                 <td>${formatMoney(d.montantDevis)}</td>
-                <td>${d.commentaire || "-"}</td>
+                <td>${d.commentaire || '-'}</td>
                 <td><span class="status-badge ${statusClass}">${d.statut}</span></td>
                 <td class="actions-cell">
                     <button class="btn-primary btn-sm" onclick="editDossier(${realIndex})"><i class="fas fa-edit"></i></button>
                     <button class="btn-danger btn-sm" onclick="deleteDossier(${realIndex})"><i class="fas fa-trash"></i></button>
                 </td>
             `;
-          tbody.appendChild(tr);
+            tbody.appendChild(tr);
         });
-      }
+    }
 
-      function updateDashboard() {
+    function updateDashboard() {
         const total = dossiers.length;
-        const attente = dossiers.filter((d) =>
-          d.statut.includes("ATTENTE"),
-        ).length;
-        const valides = dossiers.filter((d) => d.statut === "VALIDE").length;
-        const montantTotal = dossiers.reduce(
-          (acc, d) => acc + (d.montantRapport || 0),
-          0,
-        );
-        const montantDevisTotal = dossiers.reduce(
-          (acc, d) => acc + (d.montantDevis || 0),
-          0,
-        );
+        const attente = dossiers.filter(d => d.statut.includes('ATTENTE') || d.statut === 'EN COURS TRAX').length;
+        const valides = dossiers.filter(d => d.statut === 'RAPPORT VALIDE').length;
+        const montantTotal = dossiers.reduce((acc, d) => acc + (d.montantRapport || 0), 0);
+        const montantDevisTotal = dossiers.reduce((acc, d) => acc + (d.montantDevis || 0), 0);
 
-        document.getElementById("totalDossiers").textContent = total;
-        document.getElementById("totalAttente").textContent = attente;
-        document.getElementById("totalValides").textContent = valides;
-        document.getElementById("montantTotal").textContent =
-          formatMoney(montantTotal);
-        document.getElementById("montantDevisTotal").textContent =
-          formatMoney(montantDevisTotal);
-      }
+        document.getElementById('totalDossiers').textContent = total;
+        document.getElementById('totalAttente').textContent = attente;
+        document.getElementById('totalValides').textContent = valides;
+        document.getElementById('montantTotal').textContent = formatMoney(montantTotal);
+        document.getElementById('montantDevisTotal').textContent = formatMoney(montantDevisTotal);
+    }
 
-      // --- Module de Reporting par Période ---
-      function calculerPeriode() {
-        const dateDebut = document.getElementById("dateDebut").value;
-        const dateFin = document.getElementById("dateFin").value;
+    // --- Module d'Analyse par Statut (NOUVEAU) ---
 
-        if (!dateDebut || !dateFin) {
-          alert("Veuillez sélectionner une date de début et une date de fin.");
-          return;
+    // Raccourcis rapides : clique sur un bouton => pré-remplit le filtre et calcule
+    function analyseRapide(statut) {
+        document.getElementById('filtreStatutAnalyse').value = statut;
+        document.getElementById('filtreExpert').value = '';
+        document.getElementById('dateDebut').value = '';
+        document.getElementById('dateFin').value = '';
+        
+        // Mettre en surbrillance le bouton actif
+        document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        calculerAnalyse();
+    }
+
+    // Calcul de l'analyse en fonction des filtres
+    function calculerAnalyse() {
+        const statutFiltre = document.getElementById('filtreStatutAnalyse').value;
+        const expertFiltre = document.getElementById('filtreExpert').value;
+        const dateDebut = document.getElementById('dateDebut').value;
+        const dateFin = document.getElementById('dateFin').value;
+
+        let dossiersFiltres = [...dossiers];
+
+        // Filtre par statut
+        if (statutFiltre) {
+            dossiersFiltres = dossiersFiltres.filter(d => d.statut === statutFiltre);
         }
 
-        const debut = new Date(dateDebut);
-        const fin = new Date(dateFin);
-        fin.setHours(23, 59, 59); // Inclure toute la journée de fin
+        // Filtre par expert
+        if (expertFiltre) {
+            dossiersFiltres = dossiersFiltres.filter(d => d.cabinet === expertFiltre);
+        }
 
-        const dossiersFiltres = dossiers.filter((d) => {
-          if (!d.date) return false;
-          const dateDossier = new Date(d.date);
-          return dateDossier >= debut && dateDossier <= fin;
-        });
+        // Filtre par date (optionnel)
+        if (dateDebut) {
+            const debut = new Date(dateDebut);
+            dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) >= debut);
+        }
+        if (dateFin) {
+            const fin = new Date(dateFin);
+            fin.setHours(23, 59, 59);
+            dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) <= fin);
+        }
 
-        // Totaux de la période
+        // Calcul des 3 totaux demandés
         const nb = dossiersFiltres.length;
-        const totalRapport = dossiersFiltres.reduce(
-          (acc, d) => acc + (d.montantRapport || 0),
-          0,
-        );
-        const totalValide = dossiersFiltres.reduce(
-          (acc, d) => acc + (d.montantValide || 0),
-          0,
-        );
-        const totalDevis = dossiersFiltres.reduce(
-          (acc, d) => acc + (d.montantDevis || 0),
-          0,
-        );
-
-        document.getElementById("repNbDossiers").textContent = nb;
-        document.getElementById("repMontantRapport").textContent =
-          formatMoney(totalRapport);
-        document.getElementById("repMontantValide").textContent =
-          formatMoney(totalValide);
-        document.getElementById("repMontantDevis").textContent =
-          formatMoney(totalDevis);
-        document.getElementById("reportingResults").style.display = "grid";
-
-        // Répartition par Mois, Semaine, Année
-        const parMois = {};
-        const parSemaine = {};
-        const parAnnee = {};
-
-        dossiersFiltres.forEach((d) => {
-          const date = new Date(d.date);
-          const annee = date.getFullYear();
-          const mois = date.toLocaleString("fr-FR", { month: "long" });
-          const cleMois = `${mois} ${annee}`;
-
-          // Calcul du numéro de semaine
-          const debutAnnee = new Date(annee, 0, 1);
-          const jours = Math.floor((date - debutAnnee) / (24 * 60 * 60 * 1000));
-          const semaine = Math.ceil((jours + debutAnnee.getDay() + 1) / 7);
-          const cleSemaine = `Semaine ${semaine} (${annee})`;
-
-          // Initialisation
-          if (!parMois[cleMois])
-            parMois[cleMois] = { rapport: 0, valide: 0, devis: 0, nb: 0 };
-          if (!parSemaine[cleSemaine])
-            parSemaine[cleSemaine] = { rapport: 0, valide: 0, devis: 0, nb: 0 };
-          if (!parAnnee[annee])
-            parAnnee[annee] = { rapport: 0, valide: 0, devis: 0, nb: 0 };
-
-          // Ajout des montants
-          const ajouter = (obj) => {
-            obj.rapport += d.montantRapport || 0;
-            obj.valide += d.montantValide || 0;
-            obj.devis += d.montantDevis || 0;
-            obj.nb += 1;
-          };
-
-          ajouter(parMois[cleMois]);
-          ajouter(parSemaine[cleSemaine]);
-          ajouter(parAnnee[annee]);
-        });
+        const totalRapport = dossiersFiltres.reduce((acc, d) => acc + (d.montantRapport || 0), 0);
+        const totalValide = dossiersFiltres.reduce((acc, d) => acc + (d.montantValide || 0), 0);
+        const totalDevis = dossiersFiltres.reduce((acc, d) => acc + (d.montantDevis || 0), 0);
 
         // Affichage
-        const formatListe = (obj, elementId) => {
-          const ul = document.getElementById(elementId);
-          ul.innerHTML = "";
-          const keys = Object.keys(obj).sort((a, b) => {
-            // Tri basique par ordre alphabétique (pour les mois) ou numérique
-            return a.localeCompare(b);
-          });
-          keys.forEach((key) => {
-            const li = document.createElement("li");
-            li.style.padding = "5px 0";
-            li.style.borderBottom = "1px solid #eee";
-            li.innerHTML = `<strong>${key}</strong> : ${obj[key].nb} dossiers - 
-                    Rapports: ${formatMoney(obj[key].rapport)} | 
-                    Validés: ${formatMoney(obj[key].valide)} | 
-                    Devis: ${formatMoney(obj[key].devis)}`;
-            ul.appendChild(li);
-          });
-        };
+        document.getElementById('repNbDossiers').textContent = nb;
+        document.getElementById('repMontantRapport').textContent = formatMoney(totalRapport);
+        document.getElementById('repMontantValide').textContent = formatMoney(totalValide);
+        document.getElementById('repMontantDevis').textContent = formatMoney(totalDevis);
+        document.getElementById('reportingResults').style.display = 'grid';
+    }
 
-        formatListe(parMois, "listeMois");
-        formatListe(parSemaine, "listeSemaines");
-        formatListe(parAnnee, "listeAnnees");
-        document.getElementById("repartitionContainer").style.display = "block";
-      }
+    function resetAnalyse() {
+        document.getElementById('filtreStatutAnalyse').value = '';
+        document.getElementById('filtreExpert').value = '';
+        document.getElementById('dateDebut').value = '';
+        document.getElementById('dateFin').value = '';
+        document.getElementById('reportingResults').style.display = 'none';
+        document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
+    }
 
-      function resetPeriode() {
-        document.getElementById("dateDebut").value = "";
-        document.getElementById("dateFin").value = "";
-        document.getElementById("reportingResults").style.display = "none";
-        document.getElementById("repartitionContainer").style.display = "none";
-      }
+    // --- Utilitaires ---
+    function formatMoney(amount) {
+        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(amount).replace('XOF', 'FCFA');
+    }
 
-      // --- Utilitaires ---
-      function formatMoney(amount) {
-        return new Intl.NumberFormat("fr-FR", {
-          style: "currency",
-          currency: "XOF",
-          minimumFractionDigits: 0,
-        })
-          .format(amount)
-          .replace("XOF", "FCFA");
-      }
-
-      function saveData() {
-        localStorage.setItem("dossiersExpertise", JSON.stringify(dossiers));
-      }
-
-      function clearAll() {
-        if (
-          confirm(
-            "Attention ! Cela supprimera TOUTES les données. Êtes-vous sûr ?",
-          )
-        ) {
-          dossiers = [];
-          saveData();
-          renderTable();
-          updateDashboard();
-          resetPeriode();
+    function clearAll() {
+        if (confirm(`Attention ! Cela supprimera TOUTES les données du service ${serviceActif}. Êtes-vous sûr ?`)) {
+            dossiers = [];
+            sauvegarderDonnees(dossiers);
+            renderTable(); updateDashboard(); resetAnalyse();
         }
-      }
+    }
 
-      // --- Recherche et Filtres ---
-      document
-        .getElementById("searchInput")
-        .addEventListener("input", renderTable);
-      document
-        .getElementById("filterStatut")
-        .addEventListener("change", renderTable);
+    document.getElementById('searchInput').addEventListener('input', renderTable);
+    document.getElementById('filterStatut').addEventListener('change', renderTable);
 
-      // --- Export / Import CSV ---
-      function exportCSV() {
-        if (dossiers.length === 0) {
-          alert("Aucune donnée à exporter.");
-          return;
-        }
-        const headers = [
-          "NB",
-          "Assuré",
-          "Véhicule",
-          "Type",
-          "Immatriculation",
-          "Sinistre",
-          "Assureur",
-          "Photo AVT TX",
-          "Photo AP TX",
-          "Date",
-          "Livraison",
-          "Cabinet",
-          "Montant Rapport",
-          "Rapport Validé",
-          "Montant Rapport Validé",
-          "Montant Devis",
-          "Commentaire",
-          "Statut",
-        ];
-        let csvContent = headers.join(";") + "\n";
-        dossiers.forEach((d, index) => {
-          const row = [
-            index + 1,
-            `"${d.assure || ""}"`,
-            `"${d.vehicule || ""}"`,
-            `"${d.type || ""}"`,
-            `"${d.immat || ""}"`,
-            `"${d.sinistre || ""}"`,
-            `"${d.assureur || ""}"`,
-            `"${d.photoAvt || ""}"`,
-            `"${d.photoAp || ""}"`,
-            `"${d.date || ""}"`,
-            `"${d.livraison || ""}"`,
-            `"${d.cabinet || ""}"`,
-            d.montantRapport || 0,
-            `"${d.rapportValide || "Non"}"`,
-            d.montantValide || 0,
-            d.montantDevis || 0,
-            `"${(d.commentaire || "").replace(/"/g, '""')}"`,
-            `"${d.statut || ""}"`,
-          ];
-          csvContent += row.join(";") + "\n";
+    // --- Export / Import CSV ---
+    function exportCSV() {
+        if (dossiers.length === 0) { alert('Aucune donnée à exporter.'); return; }
+        const headers = ['ID', 'Assuré', 'Véhicule', 'Type', 'Immatriculation', 'Sinistre', 'Assureur', 'Photo AVT TX', 'Photo AP TX', 'Date', 'Livraison', 'Expert', 'Montant Rapport', 'Rapport Validé', 'Montant Rapport Validé', 'Montant Devis', 'Commentaire', 'Statut'];
+        let csvContent = headers.join(';') + '\n';
+        dossiers.forEach((d) => {
+            const row = [
+                `"${d.id || ''}"`,
+                `"${d.assure || ''}"`, `"${d.vehicule || ''}"`, `"${d.type || ''}"`, `"${d.immat || ''}"`, `"${d.sinistre || ''}"`, `"${d.assureur || ''}"`, `"${d.photoAvt || ''}"`, `"${d.photoAp || ''}"`, `"${d.date || ''}"`, `"${d.livraison || ''}"`, `"${d.cabinet || ''}"`, d.montantRapport || 0, `"${d.rapportValide || 'Non'}"`, d.montantValide || 0, d.montantDevis || 0, `"${(d.commentaire || '').replace(/"/g, '""')}"`, `"${d.statut || ''}"`
+            ];
+            csvContent += row.join(';') + '\n';
         });
-        const blob = new Blob(["\ufeff" + csvContent], {
-          type: "text/csv;charset=utf-8;",
-        });
-        const link = document.createElement("a");
+        const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `suivi_expertise_${new Date().toISOString().slice(0, 10)}.csv`;
-        link.style.visibility = "hidden";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+        link.download = `suivi_${serviceActif}_${new Date().toISOString().slice(0,10)}.csv`;
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
 
-      function importCSV(event) {
+    function importCSV(event) {
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = function (e) {
-          const lines = e.target.result.split("\n");
-          const newDossiers = [];
-          for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
-            const cols = line.split(";");
-            if (cols.length >= 18) {
-              newDossiers.push({
-                assure: cols[1] ? cols[1].replace(/^"|"$/g, "") : "",
-                vehicule: cols[2] ? cols[2].replace(/^"|"$/g, "") : "",
-                type: cols[3] ? cols[3].replace(/^"|"$/g, "") : "",
-                immat: cols[4] ? cols[4].replace(/^"|"$/g, "") : "",
-                sinistre: cols[5] ? cols[5].replace(/^"|"$/g, "") : "",
-                assureur: cols[6] ? cols[6].replace(/^"|"$/g, "") : "",
-                photoAvt: cols[7] ? cols[7].replace(/^"|"$/g, "") : "",
-                photoAp: cols[8] ? cols[8].replace(/^"|"$/g, "") : "",
-                date: cols[9] ? cols[9].replace(/^"|"$/g, "") : "",
-                livraison: cols[10] ? cols[10].replace(/^"|"$/g, "") : "",
-                cabinet: cols[11] ? cols[11].replace(/^"|"$/g, "") : "",
-                montantRapport: parseFloat(cols[12]) || 0,
-                rapportValide: cols[13]
-                  ? cols[13].replace(/^"|"$/g, "")
-                  : "Non",
-                montantValide: parseFloat(cols[14]) || 0,
-                montantDevis: parseFloat(cols[15]) || 0,
-                commentaire: cols[16] ? cols[16].replace(/^"|"$/g, "") : "",
-                statut: cols[17]
-                  ? cols[17].replace(/^"|"$/g, "")
-                  : "EN ATTENTE DE RAPPORT",
-              });
+        reader.onload = function(e) {
+            const lines = e.target.result.split('\n');
+            const dossiersImportes = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                const cols = line.split(';');
+                if (cols.length >= 18) {
+                    const offset = (cols[0] && cols[0].includes('-')) ? 1 : 0;
+                    dossiersImportes.push({
+                        id: (offset === 1 && cols[0]) ? cols[0].replace(/^"|"$/g, '') : genererID(),
+                        assure: cols[offset+0] ? cols[offset+0].replace(/^"|"$/g, '') : '',
+                        vehicule: cols[offset+1] ? cols[offset+1].replace(/^"|"$/g, '') : '',
+                        type: cols[offset+2] ? cols[offset+2].replace(/^"|"$/g, '') : '',
+                        immat: cols[offset+3] ? cols[offset+3].replace(/^"|"$/g, '') : '',
+                        sinistre: cols[offset+4] ? cols[offset+4].replace(/^"|"$/g, '') : '',
+                        assureur: cols[offset+5] ? cols[offset+5].replace(/^"|"$/g, '') : '',
+                        photoAvt: cols[offset+6] ? cols[offset+6].replace(/^"|"$/g, '') : '',
+                        photoAp: cols[offset+7] ? cols[offset+7].replace(/^"|"$/g, '') : '',
+                        date: cols[offset+8] ? cols[offset+8].replace(/^"|"$/g, '') : '',
+                        livraison: cols[offset+9] ? cols[offset+9].replace(/^"|"$/g, '') : '',
+                        cabinet: cols[offset+10] ? cols[offset+10].replace(/^"|"$/g, '') : '',
+                        montantRapport: parseFloat(cols[offset+11]) || 0,
+                        rapportValide: cols[offset+12] ? cols[offset+12].replace(/^"|"$/g, '') : 'Non',
+                        montantValide: parseFloat(cols[offset+13]) || 0,
+                        montantDevis: parseFloat(cols[offset+14]) || 0,
+                        commentaire: cols[offset+15] ? cols[offset+15].replace(/^"|"$/g, '') : '',
+                        statut: cols[offset+16] ? cols[offset+16].replace(/^"|"$/g, '') : 'EN ATTENTE DE RAPPORT'
+                    });
+                }
             }
-          }
-          if (newDossiers.length > 0) {
-            if (
-              confirm(
-                `${newDossiers.length} dossiers trouvés. Voulez-vous les ajouter ? (Annuler pour remplacer)`,
-              )
-            ) {
-              dossiers = dossiers.concat(newDossiers);
-            } else {
-              dossiers = newDossiers;
+
+            if (dossiersImportes.length === 0) {
+                alert('Aucun dossier valide trouvé dans le fichier.');
+                event.target.value = '';
+                return;
             }
-            saveData();
-            renderTable();
-            updateDashboard();
-            alert("Importation réussie !");
-          } else {
-            alert("Aucun dossier valide trouvé.");
-          }
-          event.target.value = "";
+
+            const choix = prompt(
+                `📁 ${dossiersImportes.length} dossiers trouvés dans le fichier.\n\n` +
+                `Que voulez-vous faire ?\n\n` +
+                `1 = FUSIONNER (Ajouter seulement les nouveaux, éviter les doublons)\n` +
+                `2 = REMPLACER (Effacer tout et mettre les nouvelles données)\n` +
+                `3 = AJOUTER TOUT (Ajouter même les doublons)\n` +
+                `4 = ANNULER\n\n` +
+                `Entrez 1, 2, 3 ou 4 :`
+            );
+
+            if (choix === '1') {
+                const empreintesExistantes = new Set(
+                    dossiers.map(d => `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`)
+                );
+                const nouveaux = dossiersImportes.filter(d => {
+                    const empreinte = `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`;
+                    return !empreintesExistantes.has(empreinte);
+                });
+                const doublonsIgnores = dossiersImportes.length - nouveaux.length;
+                dossiers = dossiers.concat(nouveaux);
+                sauvegarderDonnees(dossiers);
+                renderTable(); updateDashboard();
+                alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${doublonsIgnores} doublons ignorés\n- Total actuel : ${dossiers.length} dossiers`);
+            } else if (choix === '2') {
+                if (confirm('⚠️ Êtes-vous sûr de vouloir REMPLACER toutes les données du service ' + serviceActif + ' ?')) {
+                    dossiers = dossiersImportes;
+                    sauvegarderDonnees(dossiers);
+                    renderTable(); updateDashboard();
+                    alert(`✅ Remplacement réussi ! ${dossiers.length} dossiers chargés.`);
+                }
+            } else if (choix === '3') {
+                dossiers = dossiers.concat(dossiersImportes);
+                sauvegarderDonnees(dossiers);
+                renderTable(); updateDashboard();
+                alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés (doublons inclus).`);
+            }
+            event.target.value = '';
         };
         reader.readAsText(file);
-      }
-    </script>
-  </body>
+    }
+</script>
+
+</body>
 </html>
