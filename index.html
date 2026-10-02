@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suivi des Rapports d'Expertise - HR & UM</title>
+    <title>Suivi des Rapports d'Expertise - HR / UM / UNICARS</title>
+    <meta name="theme-color" content="#2c3e50">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- PWA Manifest intégré -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Suivi Expertise","short_name":"Expertise","start_url":"./","display":"standalone","background_color":"%232c3e50","theme_color":"%232c3e50","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2910/2910768.png","sizes":"192x192","type":"image/png"},{"src":"https://cdn-icons-png.flaticon.com/512/2910/2910768.png","sizes":"512x512","type":"image/png"}]}'>
+
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -16,8 +21,10 @@
             --success-color: #27ae60;
             --warning-color: #f39c12;
             --danger-color: #e74c3c;
-            --hr-color: #2980b9;
-            --um-color: #8e44ad;
+            /* Couleurs des services */
+            --hr-color: #e74c3c;       /* ROUGE */
+            --um-color: #2980b9;       /* BLEU */
+            --unicars-color: #7f8c8d;  /* GRIS */
         }
 
         body {
@@ -25,7 +32,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
 
         h1, h2, h3 { color: var(--primary-color); margin-bottom: 10px; }
@@ -39,6 +46,21 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        /* Indicateur de connexion */
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .connection-status.online { background: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
+        .connection-status.offline { background: #fadbd8; color: #e74c3c; border: 1px solid #e74c3c; }
+        .connection-status.syncing { background: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
+
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -51,19 +73,20 @@
 
         .service-selector {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             background: #ecf0f1;
             padding: 5px;
             border-radius: 8px;
+            flex-wrap: wrap;
         }
 
         .service-btn {
-            padding: 10px 25px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.3s;
             background: transparent;
             color: #7f8c8d;
@@ -71,6 +94,7 @@
 
         .service-btn.active-hr { background: var(--hr-color); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .service-btn.active-um { background: var(--um-color); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .service-btn.active-unicars { background: var(--unicars-color); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         .save-indicator {
             font-size: 12px;
@@ -84,11 +108,42 @@
         }
         .save-indicator.visible { opacity: 1; }
 
+        /* Bannière publicitaire */
+        .ad-banner {
+            background: linear-gradient(135deg, #ecf0f1 0%, #dfe6e9 100%);
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+        .ad-banner .ad-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: #95a5a6;
+        }
+
+        .ad-banner a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
             padding: 15px;
             background: #ecf0f1;
             border-radius: 8px;
@@ -96,27 +151,24 @@
 
         .stat-card {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border-left: 5px solid var(--accent-color);
         }
 
-        .stat-card h4 { margin: 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
-        .stat-card p { margin: 5px 0 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
+        .stat-card h4 { margin: 0; font-size: 0.8em; color: #7f8c8d; text-transform: uppercase; }
+        .stat-card p { margin: 5px 0 0; font-size: 1.2em; font-weight: bold; color: var(--primary-color); }
 
-        /* Module d'Analyse par Statut */
         .reporting-section {
             background: #fff;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-top: 5px solid var(--success-color);
         }
-
-        .reporting-section h3 { margin-top: 0; }
 
         .quick-buttons {
             display: flex;
@@ -137,11 +189,7 @@
             transition: all 0.3s;
         }
 
-        .quick-btn:hover, .quick-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
+        .quick-btn:hover, .quick-btn.active { background: var(--primary-color); color: white; }
         .quick-btn.valide-btn { border-color: var(--success-color); color: var(--success-color); }
         .quick-btn.valide-btn:hover, .quick-btn.valide-btn.active { background: var(--success-color); color: white; }
 
@@ -155,7 +203,7 @@
             border-bottom: 1px dashed var(--border-color);
         }
 
-        .reporting-filters .form-group { margin: 0; min-width: 200px; }
+        .reporting-filters .form-group { margin: 0; min-width: 180px; }
         
         .reporting-results {
             display: grid;
@@ -182,7 +230,6 @@
         .reporting-card h5 { margin: 0 0 5px 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
         .reporting-card p { margin: 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
 
-        /* Barre d'outils */
         .toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -225,7 +272,6 @@
         .btn-info:hover { background-color: #2980b9; }
         .btn-sm { padding: 5px 8px; font-size: 12px; }
 
-        /* Tableau */
         .table-responsive { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
         th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border-color); }
@@ -242,7 +288,6 @@
         .status-cours { background-color: #e8f4fd; color: #2980b9; border: 1px solid #2980b9; }
         .status-valide { background-color: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
 
-        /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto; }
         .modal-content { background-color: white; margin: 30px auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
@@ -253,10 +298,33 @@
 
         .actions-cell { display: flex; gap: 5px; }
 
+        /* Bannière de notification d'installation PWA */
+        .install-banner {
+            display: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .install-banner button {
+            background: white;
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; }
-            .toolbar, .actions-cell, .modal, .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-info, .reporting-filters, .service-selector, .save-indicator, .quick-buttons { display: none !important; }
+            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status { display: none !important; }
             .dashboard { background: white; border: 1px solid #ccc; }
             .stat-card { border: 1px solid #ccc; box-shadow: none; }
             .table-responsive { overflow: visible; border: none; }
@@ -265,13 +333,13 @@
             th { background-color: #ddd !important; color: #000 !important; -webkit-print-color-adjust: exact; }
             tr.alerte-rouge { background-color: #fadbd8 !important; -webkit-print-color-adjust: exact; }
             tr.alerte-orange { background-color: #fdebd0 !important; -webkit-print-color-adjust: exact; }
-            .status-badge { border: 1px solid #000; }
         }
 
         @media (max-width: 768px) {
             .toolbar { flex-direction: column; align-items: stretch; }
             .form-grid { grid-template-columns: 1fr; }
             .header-top { flex-direction: column; gap: 10px; }
+            .service-btn { padding: 8px 12px; font-size: 12px; }
         }
     </style>
 </head>
@@ -279,14 +347,32 @@
 
 <div class="container">
     <div class="header-top">
-        <div style="display:flex; align-items:center;">
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px;">
             <h1><i class="fas fa-clipboard-list"></i> Suivi des Rapports d'Expertise</h1>
             <div id="saveIndicator" class="save-indicator"><i class="fas fa-check-circle"></i> Sauvegardé</div>
+            <div id="connectionStatus" class="connection-status online"><i class="fas fa-cloud"></i> En ligne</div>
         </div>
         <div class="service-selector">
-            <button id="btnHR" class="service-btn active-hr" onclick="changerService('HR')">Service HR</button>
-            <button id="btnUM" class="service-btn" onclick="changerService('UM')">Service UM</button>
+            <button id="btnHR" class="service-btn active-hr" onclick="changerService('HR')">🔴 HR</button>
+            <button id="btnUM" class="service-btn" onclick="changerService('UM')">🔵 UM</button>
+            <button id="btnUNICARS" class="service-btn" onclick="changerService('UNICARS')">⚪ UNICARS</button>
         </div>
+    </div>
+
+    <!-- Bannière d'installation PWA -->
+    <div id="installBanner" class="install-banner">
+        <div><i class="fas fa-mobile-alt"></i> Installez l'application sur votre téléphone pour un accès rapide !</div>
+        <button onclick="installerPWA()">Installer</button>
+    </div>
+
+    <!-- Bannière publicitaire haut -->
+    <div class="ad-banner">
+        <div class="ad-label">Publicité</div>
+        <!-- 
+        📌 EMPLACEMENT PUB 1 - REMPLACEZ PAR VOTRE CODE GOOGLE ADSENSE
+        Exemple : <ins class="adsbygoogle" ...></ins>
+        -->
+        <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
     </div>
     
     <div class="dashboard">
@@ -297,14 +383,12 @@
         <div class="stat-card" style="border-left-color: #9b59b6;"><h4>Montant Total Devis</h4><p id="montantDevisTotal">0 FCFA</p></div>
     </div>
 
-    <!-- Module d'Analyse par Statut (NOUVEAU) -->
     <div class="reporting-section">
         <h3><i class="fas fa-calculator"></i> Analyse des Montants par Statut</h3>
         <p style="font-size: 13px; color: #7f8c8d; margin: 0 0 15px 0;">
             Sélectionnez un statut pour voir les totaux correspondants, ou utilisez les raccourcis ci-dessous.
         </p>
 
-        <!-- Raccourcis rapides -->
         <div class="quick-buttons">
             <button class="quick-btn valide-btn" onclick="analyseRapide('RAPPORT VALIDE')">
                 <i class="fas fa-check-circle"></i> Tous les Rapports Validés
@@ -320,7 +404,6 @@
             </button>
         </div>
 
-        <!-- Filtres avancés -->
         <div class="reporting-filters">
             <div class="form-group">
                 <label>Statut</label>
@@ -357,7 +440,6 @@
             <button style="background:#95a5a6; color:white;" onclick="resetAnalyse()"><i class="fas fa-undo"></i> Réinitialiser</button>
         </div>
         
-        <!-- Résultats de l'analyse -->
         <div class="reporting-results" id="reportingResults" style="display:none;">
             <div class="reporting-card total">
                 <h5>Dossiers trouvés</h5>
@@ -422,6 +504,15 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
+
+    <!-- Bannière publicitaire bas -->
+    <div class="ad-banner">
+        <div class="ad-label">Publicité</div>
+        <!-- 
+        📌 EMPLACEMENT PUB 2 - REMPLACEZ PAR VOTRE CODE GOOGLE ADSENSE
+        -->
+        <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -430,6 +521,7 @@
         <h2 id="modalTitle">Ajouter un dossier</h2>
         <form id="dossierForm">
             <input type="hidden" id="editIndex" value="-1">
+            <input type="hidden" id="editId" value="">
             <div class="form-grid">
                 <div class="form-group"><label>Assuré</label><input type="text" id="assure" required></div>
                 <div class="form-group"><label>Véhicule</label><input type="text" id="vehicule"></div>
@@ -477,70 +569,228 @@
     </div>
 </div>
 
+<!-- ============================================================== -->
+<!-- CONFIGURATION FIREBASE - REMPLACEZ PAR VOS VRAIES CLÉS -->
+<!-- ============================================================== -->
+<script type="module">
+    // Import des fonctions Firebase (via CDN)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, 
+        onSnapshot, query, where, getDocs, writeBatch, enableIndexedDbPersistence 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // ⚠️⚠️⚠️ REMPLACEZ CE BLOC PAR LA CONFIGURATION DE VOTRE PROJET FIREBASE ⚠️⚠️⚠️
+    // Vous trouverez ces informations dans : Console Firebase > Paramètres du projet > Vos apps > Configuration du SDK
+    const firebaseConfig = {
+        apiKey: "VOTRE_API_KEY",
+        authDomain: "VOTRE_PROJET.firebaseapp.com",
+        projectId: "VOTRE_PROJET_ID",
+        storageBucket: "VOTRE_PROJET.appspot.com",
+        messagingSenderId: "VOTRE_SENDER_ID",
+        appId: "VOTRE_APP_ID"
+    };
+    // ⚠️⚠️⚠️ FIN DU BLOC À REMPLACER ⚠️⚠️⚠️
+
+    // Initialisation Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Activation du mode hors-ligne (les données restent accessibles sans internet)
+    try {
+        await enableIndexedDbPersistence(db);
+        console.log("✅ Mode hors-ligne activé");
+    } catch (err) {
+        if (err.code === 'failed-precondition') {
+            console.warn("⚠️ Persistance impossible : plusieurs onglets ouverts");
+        } else if (err.code === 'unimplemented') {
+            console.warn("⚠️ Persistance non supportée par ce navigateur");
+        }
+    }
+
+    // Exposer les fonctions au scope global (pour les onclick HTML)
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.updateDoc = updateDoc;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.onSnapshot = onSnapshot;
+    window.query = query;
+    window.where = where;
+    window.getDocs = getDocs;
+    window.writeBatch = writeBatch;
+
+    // Initialiser le reste de l'app après Firebase
+    window.dispatchEvent(new Event('firebaseReady'));
+</script>
+
 <script>
+    // ============================================================
+    // VARIABLES GLOBALES
+    // ============================================================
     let serviceActif = 'HR';
+    let dossiers = [];          // Dossiers du service actif
+    let tousLesDossiers = [];   // Tous les dossiers (tous services)
+    let firebasePret = false;
+    let unsubscribeSnapshot = null;
+    let deferredPrompt = null;
 
-    function chargerDonnees() {
-        const key = `dossiersExpertise_${serviceActif}`;
-        const data = JSON.parse(localStorage.getItem(key)) || [];
-        let besoinSauvegarde = false;
-        data.forEach(d => {
-            if (!d.id) { d.id = genererID(); besoinSauvegarde = true; }
+    // ============================================================
+    // PWA - Installation sur smartphone
+    // ============================================================
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBanner').style.display = 'flex';
+    });
+
+    function installerPWA() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') {
+                    console.log('PWA installée');
+                }
+                deferredPrompt = null;
+                document.getElementById('installBanner').style.display = 'none';
+            });
+        }
+    }
+
+    // Service Worker minimal pour PWA (inline)
+    if ('serviceWorker' in navigator) {
+        const swCode = `
+            self.addEventListener('install', e => self.skipWaiting());
+            self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+            self.addEventListener('fetch', e => {
+                e.respondWith(
+                    fetch(e.request).catch(() => caches.match(e.request))
+                );
+            });
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW non enregistré:', err));
+    }
+
+    // ============================================================
+    // DÉTECTION EN LIGNE / HORS-LIGNE
+    // ============================================================
+    function updateConnectionStatus() {
+        const el = document.getElementById('connectionStatus');
+        if (navigator.onLine) {
+            el.className = 'connection-status online';
+            el.innerHTML = '<i class="fas fa-cloud"></i> En ligne';
+        } else {
+            el.className = 'connection-status offline';
+            el.innerHTML = '<i class="fas fa-cloud-slash"></i> Hors-ligne';
+        }
+    }
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+
+    // ============================================================
+    // DÉMARRAGE
+    // ============================================================
+    window.addEventListener('firebaseReady', () => {
+        firebasePret = true;
+        console.log("🔥 Firebase prêt");
+        initialiserEcouteFirebase();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateConnectionStatus();
+        // Si Firebase ne charge pas (pas d'internet au démarrage), on utilise le cache
+        setTimeout(() => {
+            if (!firebasePret) {
+                console.warn("Firebase non initialisé, mode local");
+                chargerDepuisCache();
+            }
+        }, 3000);
+    });
+
+    // ============================================================
+    // ÉCOUTE EN TEMPS RÉEL DE FIRESTORE
+    // ============================================================
+    function initialiserEcouteFirebase() {
+        if (!firebasePret) return;
+        
+        // Si une écoute est déjà active, on la coupe
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+
+        // On écoute TOUS les dossiers (tous services) pour les stats et filtres
+        const q = query(collection(db, 'dossiers'));
+        unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
+            tousLesDossiers = [];
+            snapshot.forEach((docSnap) => {
+                tousLesDossiers.push({ firebaseId: docSnap.id, ...docSnap.data() });
+            });
+            
+            // Filtrer pour le service actif
+            dossiers = tousLesDossiers.filter(d => d.service === serviceActif);
+            
+            // Sauvegarder en cache local (au cas où)
+            localStorage.setItem('cacheDossiers', JSON.stringify(tousLesDossiers));
+            
+            renderTable();
+            updateDashboard();
+            afficherIndicateurSauvegarde();
+        }, (error) => {
+            console.error("Erreur Firestore:", error);
+            // En cas d'erreur, on charge depuis le cache
+            chargerDepuisCache();
         });
-        if (besoinSauvegarde) sauvegarderDonnees(data);
-        return data;
     }
 
-    function sauvegarderDonnees(data) {
-        const key = `dossiersExpertise_${serviceActif}`;
-        localStorage.setItem(key, JSON.stringify(data));
-        afficherIndicateurSauvegarde();
+    function chargerDepuisCache() {
+        const cache = JSON.parse(localStorage.getItem('cacheDossiers')) || [];
+        tousLesDossiers = cache;
+        dossiers = tousLesDossiers.filter(d => d.service === serviceActif);
+        renderTable();
+        updateDashboard();
     }
 
-    function afficherIndicateurSauvegarde() {
-        const indicator = document.getElementById('saveIndicator');
-        indicator.classList.add('visible');
-        setTimeout(() => indicator.classList.remove('visible'), 1500);
-    }
-
-    function genererID() {
-        return `${serviceActif}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    }
-
-    let dossiers = chargerDonnees();
-
+    // ============================================================
+    // CHANGEMENT DE SERVICE
+    // ============================================================
     function changerService(service) {
         serviceActif = service;
+        
+        // Mise à jour visuelle des boutons
         document.getElementById('btnHR').className = 'service-btn' + (service === 'HR' ? ' active-hr' : '');
         document.getElementById('btnUM').className = 'service-btn' + (service === 'UM' ? ' active-um' : '');
-        dossiers = chargerDonnees();
+        document.getElementById('btnUNICARS').className = 'service-btn' + (service === 'UNICARS' ? ' active-unicars' : '');
+        
+        // Recharger les données du service
+        dossiers = tousLesDossiers.filter(d => d.service === service);
+        
         renderTable();
         updateDashboard();
         resetAnalyse();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        renderTable();
-        updateDashboard();
-    });
-
-    // --- CRUD ---
+    // ============================================================
+    // CRUD FIREBASE
+    // ============================================================
     function openModal() {
         document.getElementById('modalTitle').textContent = `Ajouter un dossier (${serviceActif})`;
         document.getElementById('dossierForm').reset();
         document.getElementById('editIndex').value = '-1';
+        document.getElementById('editId').value = '';
         document.getElementById('date').valueAsDate = new Date();
         document.getElementById('modal').style.display = 'block';
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    document.getElementById('dossierForm').addEventListener('submit', function(e) {
+    document.getElementById('dossierForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const index = document.getElementById('editIndex').value;
+        const editId = document.getElementById('editId').value;
         
-        const dossier = {
-            id: index === '-1' ? genererID() : dossiers[index].id,
+        const dossierData = {
+            service: serviceActif,
             assure: document.getElementById('assure').value,
             vehicule: document.getElementById('vehicule').value,
             type: document.getElementById('type').value,
@@ -557,20 +807,36 @@
             montantValide: parseFloat(document.getElementById('montantValide').value) || 0,
             montantDevis: parseFloat(document.getElementById('montantDevis').value) || 0,
             commentaire: document.getElementById('commentaire').value,
-            statut: document.getElementById('statut').value
+            statut: document.getElementById('statut').value,
+            updatedAt: new Date().toISOString()
         };
 
-        if (index === '-1') { dossiers.push(dossier); } 
-        else { dossiers[index] = dossier; }
-
-        sauvegarderDonnees(dossiers);
-        renderTable(); updateDashboard(); closeModal();
+        try {
+            if (index === '-1' || !editId) {
+                // AJOUT
+                dossierData.createdAt = new Date().toISOString();
+                await addDoc(collection(db, 'dossiers'), dossierData);
+                console.log("✅ Dossier ajouté");
+            } else {
+                // MODIFICATION
+                await updateDoc(doc(db, 'dossiers', editId), dossierData);
+                console.log("✅ Dossier modifié");
+            }
+            closeModal();
+        } catch (err) {
+            console.error("Erreur:", err);
+            alert("Erreur lors de l'enregistrement. Vérifiez votre connexion.\n" + err.message);
+        }
     });
 
-    function editDossier(index) {
-        const d = dossiers[index];
+    function editDossier(firebaseId) {
+        const d = dossiers.find(x => x.firebaseId === firebaseId);
+        if (!d) return;
+        
         document.getElementById('modalTitle').textContent = `Modifier le dossier (${serviceActif})`;
-        document.getElementById('editIndex').value = index;
+        document.getElementById('editIndex').value = '0'; // Peu importe, on utilise firebaseId
+        document.getElementById('editId').value = firebaseId;
+        
         document.getElementById('assure').value = d.assure || '';
         document.getElementById('vehicule').value = d.vehicule || '';
         document.getElementById('type').value = d.type || '';
@@ -588,18 +854,24 @@
         document.getElementById('montantDevis').value = d.montantDevis || 0;
         document.getElementById('commentaire').value = d.commentaire || '';
         document.getElementById('statut').value = d.statut || 'EN ATTENTE DE RAPPORT';
+        
         document.getElementById('modal').style.display = 'block';
     }
 
-    function deleteDossier(index) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) {
-            dossiers.splice(index, 1);
-            sauvegarderDonnees(dossiers);
-            renderTable(); updateDashboard();
+    async function deleteDossier(firebaseId) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) return;
+        try {
+            await deleteDoc(doc(db, 'dossiers', firebaseId));
+            console.log("✅ Dossier supprimé");
+        } catch (err) {
+            console.error("Erreur suppression:", err);
+            alert("Erreur lors de la suppression.");
         }
     }
 
-    // --- Affichage & Alertes ---
+    // ============================================================
+    // AFFICHAGE & ALERTES
+    // ============================================================
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -618,8 +890,7 @@
             return matchesSearch && matchesStatut;
         });
 
-        filteredDossiers.forEach((d) => {
-            const realIndex = dossiers.indexOf(d);
+        filteredDossiers.forEach((d, index) => {
             const tr = document.createElement('tr');
             
             let alerteClass = '';
@@ -640,7 +911,7 @@
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
 
             tr.innerHTML = `
-                <td>${realIndex + 1}</td>
+                <td>${index + 1}</td>
                 <td>${d.assure || '-'}</td>
                 <td>${d.vehicule || '-'}</td>
                 <td>${d.type || '-'}</td>
@@ -659,8 +930,8 @@
                 <td>${d.commentaire || '-'}</td>
                 <td><span class="status-badge ${statusClass}">${d.statut}</span></td>
                 <td class="actions-cell">
-                    <button class="btn-primary btn-sm" onclick="editDossier(${realIndex})"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger btn-sm" onclick="deleteDossier(${realIndex})"><i class="fas fa-trash"></i></button>
+                    <button class="btn-primary btn-sm" onclick="editDossier('${d.firebaseId}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn-danger btn-sm" onclick="deleteDossier('${d.firebaseId}')"><i class="fas fa-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -681,23 +952,21 @@
         document.getElementById('montantDevisTotal').textContent = formatMoney(montantDevisTotal);
     }
 
-    // --- Module d'Analyse par Statut (NOUVEAU) ---
-
-    // Raccourcis rapides : clique sur un bouton => pré-remplit le filtre et calcule
+    // ============================================================
+    // ANALYSE PAR STATUT
+    // ============================================================
     function analyseRapide(statut) {
         document.getElementById('filtreStatutAnalyse').value = statut;
         document.getElementById('filtreExpert').value = '';
         document.getElementById('dateDebut').value = '';
         document.getElementById('dateFin').value = '';
         
-        // Mettre en surbrillance le bouton actif
         document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         calculerAnalyse();
     }
 
-    // Calcul de l'analyse en fonction des filtres
     function calculerAnalyse() {
         const statutFiltre = document.getElementById('filtreStatutAnalyse').value;
         const expertFiltre = document.getElementById('filtreExpert').value;
@@ -706,17 +975,9 @@
 
         let dossiersFiltres = [...dossiers];
 
-        // Filtre par statut
-        if (statutFiltre) {
-            dossiersFiltres = dossiersFiltres.filter(d => d.statut === statutFiltre);
-        }
+        if (statutFiltre) dossiersFiltres = dossiersFiltres.filter(d => d.statut === statutFiltre);
+        if (expertFiltre) dossiersFiltres = dossiersFiltres.filter(d => d.cabinet === expertFiltre);
 
-        // Filtre par expert
-        if (expertFiltre) {
-            dossiersFiltres = dossiersFiltres.filter(d => d.cabinet === expertFiltre);
-        }
-
-        // Filtre par date (optionnel)
         if (dateDebut) {
             const debut = new Date(dateDebut);
             dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) >= debut);
@@ -727,13 +988,11 @@
             dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) <= fin);
         }
 
-        // Calcul des 3 totaux demandés
         const nb = dossiersFiltres.length;
         const totalRapport = dossiersFiltres.reduce((acc, d) => acc + (d.montantRapport || 0), 0);
         const totalValide = dossiersFiltres.reduce((acc, d) => acc + (d.montantValide || 0), 0);
         const totalDevis = dossiersFiltres.reduce((acc, d) => acc + (d.montantDevis || 0), 0);
 
-        // Affichage
         document.getElementById('repNbDossiers').textContent = nb;
         document.getElementById('repMontantRapport').textContent = formatMoney(totalRapport);
         document.getElementById('repMontantValide').textContent = formatMoney(totalValide);
@@ -750,30 +1009,49 @@
         document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
     }
 
-    // --- Utilitaires ---
+    // ============================================================
+    // UTILITAIRES
+    // ============================================================
     function formatMoney(amount) {
         return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(amount).replace('XOF', 'FCFA');
     }
 
-    function clearAll() {
-        if (confirm(`Attention ! Cela supprimera TOUTES les données du service ${serviceActif}. Êtes-vous sûr ?`)) {
-            dossiers = [];
-            sauvegarderDonnees(dossiers);
-            renderTable(); updateDashboard(); resetAnalyse();
+    function afficherIndicateurSauvegarde() {
+        const indicator = document.getElementById('saveIndicator');
+        indicator.classList.add('visible');
+        setTimeout(() => indicator.classList.remove('visible'), 1500);
+    }
+
+    async function clearAll() {
+        if (!confirm(`⚠️ ATTENTION ! Cela supprimera TOUS les dossiers du service ${serviceActif}.\n\nCette action est IRRÉVERSIBLE.\n\nÊtes-vous vraiment sûr ?`)) return;
+        if (!confirm(`Dernière confirmation : supprimer tous les dossiers ${serviceActif} ?`)) return;
+
+        try {
+            const aSupprimer = dossiers.filter(d => d.service === serviceActif);
+            const batch = writeBatch(db);
+            aSupprimer.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
+            await batch.commit();
+            console.log(`✅ ${aSupprimer.length} dossiers supprimés`);
+        } catch (err) {
+            console.error("Erreur:", err);
+            alert("Erreur lors de la suppression.");
         }
     }
 
     document.getElementById('searchInput').addEventListener('input', renderTable);
     document.getElementById('filterStatut').addEventListener('change', renderTable);
 
-    // --- Export / Import CSV ---
+    // ============================================================
+    // EXPORT CSV
+    // ============================================================
     function exportCSV() {
         if (dossiers.length === 0) { alert('Aucune donnée à exporter.'); return; }
-        const headers = ['ID', 'Assuré', 'Véhicule', 'Type', 'Immatriculation', 'Sinistre', 'Assureur', 'Photo AVT TX', 'Photo AP TX', 'Date', 'Livraison', 'Expert', 'Montant Rapport', 'Rapport Validé', 'Montant Rapport Validé', 'Montant Devis', 'Commentaire', 'Statut'];
+        const headers = ['ID', 'Service', 'Assuré', 'Véhicule', 'Type', 'Immatriculation', 'Sinistre', 'Assureur', 'Photo AVT TX', 'Photo AP TX', 'Date', 'Livraison', 'Expert', 'Montant Rapport', 'Rapport Validé', 'Montant Rapport Validé', 'Montant Devis', 'Commentaire', 'Statut'];
         let csvContent = headers.join(';') + '\n';
         dossiers.forEach((d) => {
             const row = [
-                `"${d.id || ''}"`,
+                `"${d.firebaseId || ''}"`,
+                `"${d.service || ''}"`,
                 `"${d.assure || ''}"`, `"${d.vehicule || ''}"`, `"${d.type || ''}"`, `"${d.immat || ''}"`, `"${d.sinistre || ''}"`, `"${d.assureur || ''}"`, `"${d.photoAvt || ''}"`, `"${d.photoAp || ''}"`, `"${d.date || ''}"`, `"${d.livraison || ''}"`, `"${d.cabinet || ''}"`, d.montantRapport || 0, `"${d.rapportValide || 'Non'}"`, d.montantValide || 0, d.montantDevis || 0, `"${(d.commentaire || '').replace(/"/g, '""')}"`, `"${d.statut || ''}"`
             ];
             csvContent += row.join(';') + '\n';
@@ -786,21 +1064,26 @@
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    function importCSV(event) {
+    // ============================================================
+    // IMPORT CSV avec détection de doublons
+    // ============================================================
+    async function importCSV(event) {
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = async function(e) {
             const lines = e.target.result.split('\n');
             const dossiersImportes = [];
+            
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 const cols = line.split(';');
                 if (cols.length >= 18) {
-                    const offset = (cols[0] && cols[0].includes('-')) ? 1 : 0;
+                    // Détection de l'offset (ID + Service = 2 colonnes en tête)
+                    const offset = (cols[0] && cols[0].includes('-')) ? 2 : 1;
                     dossiersImportes.push({
-                        id: (offset === 1 && cols[0]) ? cols[0].replace(/^"|"$/g, '') : genererID(),
+                        service: cols[1] ? cols[1].replace(/^"|"$/g, '') : serviceActif,
                         assure: cols[offset+0] ? cols[offset+0].replace(/^"|"$/g, '') : '',
                         vehicule: cols[offset+1] ? cols[offset+1].replace(/^"|"$/g, '') : '',
                         type: cols[offset+2] ? cols[offset+2].replace(/^"|"$/g, '') : '',
@@ -828,6 +1111,11 @@
                 return;
             }
 
+            // On force le service actif si non spécifié
+            dossiersImportes.forEach(d => { 
+                if (!d.service) d.service = serviceActif; 
+            });
+
             const choix = prompt(
                 `📁 ${dossiersImportes.length} dossiers trouvés dans le fichier.\n\n` +
                 `Que voulez-vous faire ?\n\n` +
@@ -838,32 +1126,61 @@
                 `Entrez 1, 2, 3 ou 4 :`
             );
 
-            if (choix === '1') {
-                const empreintesExistantes = new Set(
-                    dossiers.map(d => `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`)
-                );
-                const nouveaux = dossiersImportes.filter(d => {
-                    const empreinte = `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`;
-                    return !empreintesExistantes.has(empreinte);
-                });
-                const doublonsIgnores = dossiersImportes.length - nouveaux.length;
-                dossiers = dossiers.concat(nouveaux);
-                sauvegarderDonnees(dossiers);
-                renderTable(); updateDashboard();
-                alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${doublonsIgnores} doublons ignorés\n- Total actuel : ${dossiers.length} dossiers`);
-            } else if (choix === '2') {
-                if (confirm('⚠️ Êtes-vous sûr de vouloir REMPLACER toutes les données du service ' + serviceActif + ' ?')) {
-                    dossiers = dossiersImportes;
-                    sauvegarderDonnees(dossiers);
-                    renderTable(); updateDashboard();
-                    alert(`✅ Remplacement réussi ! ${dossiers.length} dossiers chargés.`);
+            try {
+                if (choix === '1') {
+                    // FUSION : on compare avec les dossiers existants
+                    const empreintesExistantes = new Set(
+                        tousLesDossiers.map(d => `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`)
+                    );
+                    const nouveaux = dossiersImportes.filter(d => {
+                        const empreinte = `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`;
+                        return !empreintesExistantes.has(empreinte);
+                    });
+
+                    const batch = writeBatch(db);
+                    nouveaux.forEach(d => {
+                        const newRef = doc(collection(db, 'dossiers'));
+                        d.createdAt = new Date().toISOString();
+                        d.updatedAt = d.createdAt;
+                        batch.set(newRef, d);
+                    });
+                    await batch.commit();
+
+                    alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
+
+                } else if (choix === '2') {
+                    if (confirm('⚠️ Êtes-vous sûr de vouloir REMPLACER toutes les données du service ' + serviceActif + ' ?')) {
+                        // Supprimer les dossiers existants du service
+                        const batch = writeBatch(db);
+                        dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
+                        
+                        // Ajouter les nouveaux
+                        dossiersImportes.forEach(d => {
+                            const newRef = doc(collection(db, 'dossiers'));
+                            d.service = serviceActif;
+                            d.createdAt = new Date().toISOString();
+                            d.updatedAt = d.createdAt;
+                            batch.set(newRef, d);
+                        });
+                        await batch.commit();
+                        alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés.`);
+                    }
+                } else if (choix === '3') {
+                    const batch = writeBatch(db);
+                    dossiersImportes.forEach(d => {
+                        const newRef = doc(collection(db, 'dossiers'));
+                        d.createdAt = new Date().toISOString();
+                        d.updatedAt = d.createdAt;
+                        batch.set(newRef, d);
+                    });
+                    await batch.commit();
+                    alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
                 }
-            } else if (choix === '3') {
-                dossiers = dossiers.concat(dossiersImportes);
-                sauvegarderDonnees(dossiers);
-                renderTable(); updateDashboard();
-                alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés (doublons inclus).`);
+            } catch (err) {
+                console.error("Erreur import:", err);
+                alert("Erreur lors de l'import. Vérifiez votre connexion.\n" + err.message);
             }
+            
             event.target.value = '';
         };
         reader.readAsText(file);
