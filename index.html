@@ -1065,126 +1065,198 @@
     }
 
     // ============================================================
-    // IMPORT CSV avec détection de doublons
-    // ============================================================
-    async function importCSV(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            const lines = e.target.result.split('\n');
-            const dossiersImportes = [];
+// IMPORT CSV ULTRA-INTELLIGENT (détecte automatiquement le format)
+// ============================================================
+async function importCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        let contenu = e.target.result;
+        
+        // Détection du séparateur (; ou ,)
+        const premiereLigne = contenu.split('\n')[0];
+        const nbPointsVirgules = (premiereLigne.match(/;/g) || []).length;
+        const nbVirgules = (premiereLigne.match(/,/g) || []).length;
+        const separateur = nbPointsVirgules >= nbVirgules ? ';' : ',';
+        console.log(`📊 Séparateur détecté : "${separateur}" (${nbPointsVirgules} ; vs ${nbVirgules} ,)`);
+        
+        const lines = contenu.split('\n');
+        const dossiersImportes = [];
+        let lignesIgnorees = 0;
+        
+        // Analyser l'en-tête pour comprendre le format
+        const entete = lines[0].split(separateur).map(c => c.trim().replace(/^"|"$/g, '').toLowerCase());
+        console.log('📋 En-tête détecté :', entete);
+        
+        // Détection automatique de la structure
+        const aColonneID = entete[0] === 'id';
+        const aColonneService = entete[1] === 'service';
+        const aColonneNB = entete[0] === 'nb';
+        
+        console.log(`🔍 Structure détectée : ID=${aColonneID}, Service=${aColonneService}, NB=${aColonneNB}`);
+        
+        // Calcul de l'offset (combien de colonnes ignorer au début)
+        let offset = 0;
+        if (aColonneID) offset++;
+        if (aColonneService) offset++;
+        if (aColonneNB) offset++;
+        
+        console.log(`➡️ Offset appliqué : ${offset} colonnes à ignorer`);
+        
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
             
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                const cols = line.split(';');
-                if (cols.length >= 18) {
-                    // Détection de l'offset (ID + Service = 2 colonnes en tête)
-                    const offset = (cols[0] && cols[0].includes('-')) ? 2 : 1;
-                    dossiersImportes.push({
-                        service: cols[1] ? cols[1].replace(/^"|"$/g, '') : serviceActif,
-                        assure: cols[offset+0] ? cols[offset+0].replace(/^"|"$/g, '') : '',
-                        vehicule: cols[offset+1] ? cols[offset+1].replace(/^"|"$/g, '') : '',
-                        type: cols[offset+2] ? cols[offset+2].replace(/^"|"$/g, '') : '',
-                        immat: cols[offset+3] ? cols[offset+3].replace(/^"|"$/g, '') : '',
-                        sinistre: cols[offset+4] ? cols[offset+4].replace(/^"|"$/g, '') : '',
-                        assureur: cols[offset+5] ? cols[offset+5].replace(/^"|"$/g, '') : '',
-                        photoAvt: cols[offset+6] ? cols[offset+6].replace(/^"|"$/g, '') : '',
-                        photoAp: cols[offset+7] ? cols[offset+7].replace(/^"|"$/g, '') : '',
-                        date: cols[offset+8] ? cols[offset+8].replace(/^"|"$/g, '') : '',
-                        livraison: cols[offset+9] ? cols[offset+9].replace(/^"|"$/g, '') : '',
-                        cabinet: cols[offset+10] ? cols[offset+10].replace(/^"|"$/g, '') : '',
-                        montantRapport: parseFloat(cols[offset+11]) || 0,
-                        rapportValide: cols[offset+12] ? cols[offset+12].replace(/^"|"$/g, '') : 'Non',
-                        montantValide: parseFloat(cols[offset+13]) || 0,
-                        montantDevis: parseFloat(cols[offset+14]) || 0,
-                        commentaire: cols[offset+15] ? cols[offset+15].replace(/^"|"$/g, '') : '',
-                        statut: cols[offset+16] ? cols[offset+16].replace(/^"|"$/g, '') : 'EN ATTENTE DE RAPPORT'
-                    });
+            // Séparation selon le séparateur détecté
+            const cols = line.split(separateur);
+            
+            // Vérification : il faut au moins 17 colonnes de données après l'offset
+            if (cols.length < 17 + offset) {
+                lignesIgnorees++;
+                continue;
+            }
+            
+            // Récupérer le service si présent, sinon celui actif
+            let serviceDossier = serviceActif;
+            if (aColonneService && cols[1]) {
+                const serviceLu = cols[1].replace(/^"|"$/g, '').toUpperCase();
+                if (serviceLu === 'HR' || serviceLu === 'UM' || serviceLu === 'UNICARS') {
+                    serviceDossier = serviceLu;
                 }
             }
-
-            if (dossiersImportes.length === 0) {
-                alert('Aucun dossier valide trouvé dans le fichier.');
-                event.target.value = '';
-                return;
-            }
-
-            // On force le service actif si non spécifié
-            dossiersImportes.forEach(d => { 
-                if (!d.service) d.service = serviceActif; 
+            
+            // Nettoyer une valeur
+            const nettoyer = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+            
+            dossiersImportes.push({
+                service: serviceDossier,
+                assure: nettoyer(cols[offset + 0]),
+                vehicule: nettoyer(cols[offset + 1]),
+                type: nettoyer(cols[offset + 2]),
+                immat: nettoyer(cols[offset + 3]),
+                sinistre: nettoyer(cols[offset + 4]),
+                assureur: nettoyer(cols[offset + 5]),
+                photoAvt: nettoyer(cols[offset + 6]),
+                photoAp: nettoyer(cols[offset + 7]),
+                date: nettoyer(cols[offset + 8]),
+                livraison: nettoyer(cols[offset + 9]),
+                cabinet: nettoyer(cols[offset + 10]),
+                montantRapport: parseFloat(cols[offset + 11]) || 0,
+                rapportValide: nettoyer(cols[offset + 12]) || 'Non',
+                montantValide: parseFloat(cols[offset + 13]) || 0,
+                montantDevis: parseFloat(cols[offset + 14]) || 0,
+                commentaire: nettoyer(cols[offset + 15]),
+                statut: nettoyer(cols[offset + 16]) || 'EN ATTENTE DE RAPPORT'
             });
-
-            const choix = prompt(
-                `📁 ${dossiersImportes.length} dossiers trouvés dans le fichier.\n\n` +
-                `Que voulez-vous faire ?\n\n` +
-                `1 = FUSIONNER (Ajouter seulement les nouveaux, éviter les doublons)\n` +
-                `2 = REMPLACER (Effacer tout et mettre les nouvelles données)\n` +
-                `3 = AJOUTER TOUT (Ajouter même les doublons)\n` +
-                `4 = ANNULER\n\n` +
-                `Entrez 1, 2, 3 ou 4 :`
-            );
-
-            try {
-                if (choix === '1') {
-                    // FUSION : on compare avec les dossiers existants
-                    const empreintesExistantes = new Set(
-                        tousLesDossiers.map(d => `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`)
-                    );
-                    const nouveaux = dossiersImportes.filter(d => {
-                        const empreinte = `${d.immat}|${d.sinistre}|${d.date}|${d.montantRapport}`;
-                        return !empreintesExistantes.has(empreinte);
-                    });
-
-                    const batch = writeBatch(db);
-                    nouveaux.forEach(d => {
-                        const newRef = doc(collection(db, 'dossiers'));
-                        d.createdAt = new Date().toISOString();
-                        d.updatedAt = d.createdAt;
-                        batch.set(newRef, d);
-                    });
-                    await batch.commit();
-
-                    alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
-
-                } else if (choix === '2') {
-                    if (confirm('⚠️ Êtes-vous sûr de vouloir REMPLACER toutes les données du service ' + serviceActif + ' ?')) {
-                        // Supprimer les dossiers existants du service
-                        const batch = writeBatch(db);
-                        dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
-                        
-                        // Ajouter les nouveaux
-                        dossiersImportes.forEach(d => {
-                            const newRef = doc(collection(db, 'dossiers'));
-                            d.service = serviceActif;
-                            d.createdAt = new Date().toISOString();
-                            d.updatedAt = d.createdAt;
-                            batch.set(newRef, d);
-                        });
-                        await batch.commit();
-                        alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés.`);
-                    }
-                } else if (choix === '3') {
-                    const batch = writeBatch(db);
-                    dossiersImportes.forEach(d => {
-                        const newRef = doc(collection(db, 'dossiers'));
-                        d.createdAt = new Date().toISOString();
-                        d.updatedAt = d.createdAt;
-                        batch.set(newRef, d);
-                    });
-                    await batch.commit();
-                    alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
-                }
-            } catch (err) {
-                console.error("Erreur import:", err);
-                alert("Erreur lors de l'import. Vérifiez votre connexion.\n" + err.message);
-            }
-            
+        }
+        
+        console.log(`✅ ${dossiersImportes.length} dossiers valides, ${lignesIgnorees} lignes ignorées`);
+        
+        if (dossiersImportes.length === 0) {
+            alert(`❌ Aucun dossier valide trouvé dans le fichier.\n\n` +
+                  `Diagnostic :\n` +
+                  `- Séparateur détecté : "${separateur}"\n` +
+                  `- Nombre de colonnes en-tête : ${entete.length}\n` +
+                  `- Colonnes attendues : 18 ou 19\n\n` +
+                  `Vérifiez que votre fichier est bien un export de cette application.`);
             event.target.value = '';
-        };
-        reader.readAsText(file);
-    }
+            return;
+        }
+        
+        // Aperçu avant import
+        const apercu = dossiersImportes.slice(0, 3).map((d, i) => 
+            `${i+1}. ${d.immat || '(sans immat)'} - ${d.assure || '(sans nom)'} - ${d.service}`
+        ).join('\n');
+        
+        const choix = prompt(
+            `📁 ${dossiersImportes.length} dossiers trouvés.\n` +
+            `Séparateur : "${separateur}" | Structure : ${aColonneID ? 'Nouvelle (avec ID)' : 'Ancienne (avec NB)'}\n\n` +
+            `Aperçu des 3 premiers :\n${apercu}\n\n` +
+            `Que voulez-vous faire ?\n\n` +
+            `1 = FUSIONNER (ajouter seulement les nouveaux, éviter les doublons)\n` +
+            `2 = REMPLACER (effacer le service "${serviceActif}" et mettre les nouvelles données)\n` +
+            `3 = AJOUTER TOUT (ajouter même les doublons)\n` +
+            `4 = ANNULER`
+        );
+        
+        try {
+            if (choix === '1') {
+                // FUSION avec détection de doublons
+                const empreintesExistantes = new Set(
+                    tousLesDossiers.map(d => 
+                        `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`
+                    )
+                );
+                
+                const nouveaux = dossiersImportes.filter(d => {
+                    const empreinte = `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`;
+                    return !empreintesExistantes.has(empreinte);
+                });
+                
+                if (nouveaux.length === 0) {
+                    alert(`ℹ️ Tous les dossiers du fichier sont déjà présents. Aucun ajout effectué.`);
+                    event.target.value = '';
+                    return;
+                }
+                
+                const batch = writeBatch(db);
+                nouveaux.forEach(d => {
+                    const newRef = doc(collection(db, 'dossiers'));
+                    d.createdAt = new Date().toISOString();
+                    d.updatedAt = d.createdAt;
+                    batch.set(newRef, d);
+                });
+                await batch.commit();
+                
+                alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
+                
+            } else if (choix === '2') {
+                if (!confirm(`⚠️ REMPLACER toutes les données du service ${serviceActif} ?\n\nCela supprimera ${dossiers.length} dossier(s) existant(s).`)) {
+                    event.target.value = '';
+                    return;
+                }
+                
+                // Supprimer les dossiers existants du service actif
+                const batch = writeBatch(db);
+                dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
+                
+                // Ajouter les nouveaux (forcer le service actif pour éviter les mélanges)
+                dossiersImportes.forEach(d => {
+                    const newRef = doc(collection(db, 'dossiers'));
+                    d.service = serviceActif; // ← Force le service actif
+                    d.createdAt = new Date().toISOString();
+                    d.updatedAt = d.createdAt;
+                    batch.set(newRef, d);
+                });
+                await batch.commit();
+                
+                alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés dans ${serviceActif}.`);
+                
+            } else if (choix === '3') {
+                const batch = writeBatch(db);
+                dossiersImportes.forEach(d => {
+                    const newRef = doc(collection(db, 'dossiers'));
+                    d.createdAt = new Date().toISOString();
+                    d.updatedAt = d.createdAt;
+                    batch.set(newRef, d);
+                });
+                await batch.commit();
+                
+                alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
+            }
+            // Si choix = 4 ou fermeture de la boîte, on ne fait rien
+            
+        } catch (err) {
+            console.error("Erreur import:", err);
+            alert("❌ Erreur lors de l'import :\n" + err.message);
+        }
+        
+        event.target.value = '';
+    };
+    reader.readAsText(file, 'UTF-8');
+}
 </script>
 
 </body>
