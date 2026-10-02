@@ -7,7 +7,6 @@
     <meta name="theme-color" content="#2c3e50">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <!-- PWA Manifest intégré -->
     <link rel="manifest" href='data:application/manifest+json,{"name":"Suivi Expertise","short_name":"Expertise","start_url":"./","display":"standalone","background_color":"%232c3e50","theme_color":"%232c3e50","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2910/2910768.png","sizes":"192x192","type":"image/png"},{"src":"https://cdn-icons-png.flaticon.com/512/2910/2910768.png","sizes":"512x512","type":"image/png"}]}'>
 
     <style>
@@ -21,10 +20,10 @@
             --success-color: #27ae60;
             --warning-color: #f39c12;
             --danger-color: #e74c3c;
-            /* Couleurs des services */
-            --hr-color: #e74c3c;       /* ROUGE */
-            --um-color: #2980b9;       /* BLEU */
-            --unicars-color: #7f8c8d;  /* GRIS */
+            --info-color: #3498db;
+            --hr-color: #e74c3c;
+            --um-color: #2980b9;
+            --unicars-color: #7f8c8d;
         }
 
         body {
@@ -46,7 +45,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* Indicateur de connexion */
         .connection-status {
             display: inline-flex;
             align-items: center;
@@ -59,7 +57,6 @@
         }
         .connection-status.online { background: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
         .connection-status.offline { background: #fadbd8; color: #e74c3c; border: 1px solid #e74c3c; }
-        .connection-status.syncing { background: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
 
         .header-top {
             display: flex;
@@ -108,7 +105,6 @@
         }
         .save-indicator.visible { opacity: 1; }
 
-        /* Bannière publicitaire */
         .ad-banner {
             background: linear-gradient(135deg, #ecf0f1 0%, #dfe6e9 100%);
             border: 2px dashed #bdc3c7;
@@ -230,6 +226,124 @@
         .reporting-card h5 { margin: 0 0 5px 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
         .reporting-card p { margin: 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
 
+        /* Tableau des résultats filtrés */
+        .filtered-results-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filtered-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filtered-results-header h4 {
+            margin: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filtered-results-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .filtered-results-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export-filtered {
+            background: var(--success-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-export-filtered:hover { background: #219150; }
+
+        .btn-print-filtered {
+            background: var(--info-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-print-filtered:hover { background: #2980b9; }
+
+        .filtered-table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .filtered-table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .filtered-table-container th {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            font-size: 11px;
+        }
+
+        .filtered-table-container td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .filtered-table-container tr:hover {
+            background: #f8f9fa;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+
         .toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -298,7 +412,6 @@
 
         .actions-cell { display: flex; gap: 5px; }
 
-        /* Bannière de notification d'installation PWA */
         .install-banner {
             display: none;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -306,7 +419,6 @@
             padding: 12px 20px;
             border-radius: 8px;
             margin-bottom: 15px;
-            display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
@@ -324,7 +436,7 @@
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; }
-            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status { display: none !important; }
+            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status, .filtered-results-actions { display: none !important; }
             .dashboard { background: white; border: 1px solid #ccc; }
             .stat-card { border: 1px solid #ccc; box-shadow: none; }
             .table-responsive { overflow: visible; border: none; }
@@ -359,19 +471,14 @@
         </div>
     </div>
 
-    <!-- Bannière d'installation PWA -->
     <div id="installBanner" class="install-banner">
-        <div><i class="fas fa-mobile-alt"></i> Installez l'application sur votre téléphone pour un accès rapide !</div>
+        <div><i class="fas fa-mobile-alt"></i> Installez l'application sur votre téléphone !</div>
         <button onclick="installerPWA()">Installer</button>
     </div>
 
     <!-- Bannière publicitaire haut -->
     <div class="ad-banner">
         <div class="ad-label">Publicité</div>
-        <!-- 
-        📌 EMPLACEMENT PUB 1 - REMPLACEZ PAR VOTRE CODE GOOGLE ADSENSE
-        Exemple : <ins class="adsbygoogle" ...></ins>
-        -->
         <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
     </div>
     
@@ -458,6 +565,47 @@
                 <p id="repMontantDevis">0 FCFA</p>
             </div>
         </div>
+
+        <!-- 🆕 Tableau des dossiers filtrés -->
+        <div class="filtered-results-section" id="filteredResultsSection" style="display:none;">
+            <div class="filtered-results-header">
+                <h4>
+                    <i class="fas fa-list-ul"></i> 
+                    Détail des dossiers filtrés 
+                    <span class="filtered-results-count" id="filteredCount">0</span>
+                </h4>
+                <div class="filtered-results-actions">
+                    <button class="btn-export-filtered" onclick="exportFilteredCSV()">
+                        <i class="fas fa-file-excel"></i> Exporter
+                    </button>
+                    <button class="btn-print-filtered" onclick="imprimerFiltres()">
+                        <i class="fas fa-print"></i> Imprimer
+                    </button>
+                    <button class="btn-danger btn-sm" onclick="masquerTableauFiltre()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="filtered-table-container">
+                <table id="filteredTable">
+                    <thead>
+                        <tr>
+                            <th>NB</th>
+                            <th>Date</th>
+                            <th>Assuré</th>
+                            <th>Immatriculation</th>
+                            <th>Sinistre</th>
+                            <th>Expert</th>
+                            <th>Montant Rapport</th>
+                            <th>Montant Validé</th>
+                            <th>Montant Devis</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filteredTableBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="toolbar">
@@ -508,9 +656,6 @@
     <!-- Bannière publicitaire bas -->
     <div class="ad-banner">
         <div class="ad-label">Publicité</div>
-        <!-- 
-        📌 EMPLACEMENT PUB 2 - REMPLACEZ PAR VOTRE CODE GOOGLE ADSENSE
-        -->
         <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
     </div>
 </div>
@@ -573,7 +718,6 @@
 <!-- CONFIGURATION FIREBASE - REMPLACEZ PAR VOS VRAIES CLÉS -->
 <!-- ============================================================== -->
 <script type="module">
-    // Import des fonctions Firebase (via CDN)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
         getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, 
@@ -581,22 +725,19 @@
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     // ⚠️⚠️⚠️ REMPLACEZ CE BLOC PAR LA CONFIGURATION DE VOTRE PROJET FIREBASE ⚠️⚠️⚠️
-    // Vous trouverez ces informations dans : Console Firebase > Paramètres du projet > Vos apps > Configuration du SDK
-   const firebaseConfig = {
-  apiKey: "AIzaSyAxfEpi-NERVExxVYD2EmH7JppiIQDwWOM",
-  authDomain: "ntr-garage.firebaseapp.com",
-  projectId: "ntr-garage",
-  storageBucket: "ntr-garage.firebasestorage.app",
-  messagingSenderId: "606167388967",
-  appId: "1:606167388967:web:7ad669fd353cdeeb7a8f02"
-};
+    const firebaseConfig = {
+        apiKey: "VOTRE_API_KEY",
+        authDomain: "VOTRE_PROJET.firebaseapp.com",
+        projectId: "VOTRE_PROJET_ID",
+        storageBucket: "VOTRE_PROJET.appspot.com",
+        messagingSenderId: "VOTRE_SENDER_ID",
+        appId: "VOTRE_APP_ID"
+    };
     // ⚠️⚠️⚠️ FIN DU BLOC À REMPLACER ⚠️⚠️⚠️
 
-    // Initialisation Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Activation du mode hors-ligne (les données restent accessibles sans internet)
     try {
         await enableIndexedDbPersistence(db);
         console.log("✅ Mode hors-ligne activé");
@@ -608,7 +749,6 @@
         }
     }
 
-    // Exposer les fonctions au scope global (pour les onclick HTML)
     window.db = db;
     window.collection = collection;
     window.addDoc = addDoc;
@@ -621,23 +761,20 @@
     window.getDocs = getDocs;
     window.writeBatch = writeBatch;
 
-    // Initialiser le reste de l'app après Firebase
     window.dispatchEvent(new Event('firebaseReady'));
 </script>
 
 <script>
-    // ============================================================
-    // VARIABLES GLOBALES
-    // ============================================================
     let serviceActif = 'HR';
-    let dossiers = [];          // Dossiers du service actif
-    let tousLesDossiers = [];   // Tous les dossiers (tous services)
+    let dossiers = [];
+    let tousLesDossiers = [];
     let firebasePret = false;
     let unsubscribeSnapshot = null;
     let deferredPrompt = null;
+    let dossiersFiltresActuels = [];
 
     // ============================================================
-    // PWA - Installation sur smartphone
+    // PWA
     // ============================================================
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -649,24 +786,19 @@
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choice) => {
-                if (choice.outcome === 'accepted') {
-                    console.log('PWA installée');
-                }
+                if (choice.outcome === 'accepted') console.log('PWA installée');
                 deferredPrompt = null;
                 document.getElementById('installBanner').style.display = 'none';
             });
         }
     }
 
-    // Service Worker minimal pour PWA (inline)
     if ('serviceWorker' in navigator) {
         const swCode = `
             self.addEventListener('install', e => self.skipWaiting());
             self.addEventListener('activate', e => e.waitUntil(clients.claim()));
             self.addEventListener('fetch', e => {
-                e.respondWith(
-                    fetch(e.request).catch(() => caches.match(e.request))
-                );
+                e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
             });
         `;
         const blob = new Blob([swCode], { type: 'application/javascript' });
@@ -675,7 +807,7 @@
     }
 
     // ============================================================
-    // DÉTECTION EN LIGNE / HORS-LIGNE
+    // CONNEXION
     // ============================================================
     function updateConnectionStatus() {
         const el = document.getElementById('connectionStatus');
@@ -701,7 +833,6 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         updateConnectionStatus();
-        // Si Firebase ne charge pas (pas d'internet au démarrage), on utilise le cache
         setTimeout(() => {
             if (!firebasePret) {
                 console.warn("Firebase non initialisé, mode local");
@@ -711,34 +842,25 @@
     });
 
     // ============================================================
-    // ÉCOUTE EN TEMPS RÉEL DE FIRESTORE
+    // ÉCOUTE FIRESTORE
     // ============================================================
     function initialiserEcouteFirebase() {
         if (!firebasePret) return;
-        
-        // Si une écoute est déjà active, on la coupe
         if (unsubscribeSnapshot) unsubscribeSnapshot();
 
-        // On écoute TOUS les dossiers (tous services) pour les stats et filtres
         const q = query(collection(db, 'dossiers'));
         unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
             tousLesDossiers = [];
             snapshot.forEach((docSnap) => {
                 tousLesDossiers.push({ firebaseId: docSnap.id, ...docSnap.data() });
             });
-            
-            // Filtrer pour le service actif
             dossiers = tousLesDossiers.filter(d => d.service === serviceActif);
-            
-            // Sauvegarder en cache local (au cas où)
             localStorage.setItem('cacheDossiers', JSON.stringify(tousLesDossiers));
-            
             renderTable();
             updateDashboard();
             afficherIndicateurSauvegarde();
         }, (error) => {
             console.error("Erreur Firestore:", error);
-            // En cas d'erreur, on charge depuis le cache
             chargerDepuisCache();
         });
     }
@@ -756,22 +878,17 @@
     // ============================================================
     function changerService(service) {
         serviceActif = service;
-        
-        // Mise à jour visuelle des boutons
         document.getElementById('btnHR').className = 'service-btn' + (service === 'HR' ? ' active-hr' : '');
         document.getElementById('btnUM').className = 'service-btn' + (service === 'UM' ? ' active-um' : '');
         document.getElementById('btnUNICARS').className = 'service-btn' + (service === 'UNICARS' ? ' active-unicars' : '');
-        
-        // Recharger les données du service
         dossiers = tousLesDossiers.filter(d => d.service === service);
-        
         renderTable();
         updateDashboard();
         resetAnalyse();
     }
 
     // ============================================================
-    // CRUD FIREBASE
+    // CRUD
     // ============================================================
     function openModal() {
         document.getElementById('modalTitle').textContent = `Ajouter un dossier (${serviceActif})`;
@@ -786,7 +903,6 @@
 
     document.getElementById('dossierForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const index = document.getElementById('editIndex').value;
         const editId = document.getElementById('editId').value;
         
         const dossierData = {
@@ -812,20 +928,16 @@
         };
 
         try {
-            if (index === '-1' || !editId) {
-                // AJOUT
+            if (!editId) {
                 dossierData.createdAt = new Date().toISOString();
                 await addDoc(collection(db, 'dossiers'), dossierData);
-                console.log("✅ Dossier ajouté");
             } else {
-                // MODIFICATION
                 await updateDoc(doc(db, 'dossiers', editId), dossierData);
-                console.log("✅ Dossier modifié");
             }
             closeModal();
         } catch (err) {
             console.error("Erreur:", err);
-            alert("Erreur lors de l'enregistrement. Vérifiez votre connexion.\n" + err.message);
+            alert("Erreur lors de l'enregistrement.\n" + err.message);
         }
     });
 
@@ -834,7 +946,6 @@
         if (!d) return;
         
         document.getElementById('modalTitle').textContent = `Modifier le dossier (${serviceActif})`;
-        document.getElementById('editIndex').value = '0'; // Peu importe, on utilise firebaseId
         document.getElementById('editId').value = firebaseId;
         
         document.getElementById('assure').value = d.assure || '';
@@ -862,7 +973,6 @@
         if (!confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) return;
         try {
             await deleteDoc(doc(db, 'dossiers', firebaseId));
-            console.log("✅ Dossier supprimé");
         } catch (err) {
             console.error("Erreur suppression:", err);
             alert("Erreur lors de la suppression.");
@@ -870,7 +980,7 @@
     }
 
     // ============================================================
-    // AFFICHAGE & ALERTES
+    // AFFICHAGE
     // ============================================================
     function renderTable() {
         const tbody = document.getElementById('tableBody');
@@ -988,6 +1098,14 @@
             dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) <= fin);
         }
 
+        dossiersFiltres.sort((a, b) => {
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            return new Date(b.date) - new Date(a.date);
+        });
+
+        dossiersFiltresActuels = dossiersFiltres;
+
         const nb = dossiersFiltres.length;
         const totalRapport = dossiersFiltres.reduce((acc, d) => acc + (d.montantRapport || 0), 0);
         const totalValide = dossiersFiltres.reduce((acc, d) => acc + (d.montantValide || 0), 0);
@@ -998,6 +1116,207 @@
         document.getElementById('repMontantValide').textContent = formatMoney(totalValide);
         document.getElementById('repMontantDevis').textContent = formatMoney(totalDevis);
         document.getElementById('reportingResults').style.display = 'grid';
+
+        afficherTableauFiltre(dossiersFiltres);
+    }
+
+    function afficherTableauFiltre(dossiersAffiches) {
+        const tbody = document.getElementById('filteredTableBody');
+        tbody.innerHTML = '';
+
+        document.getElementById('filteredCount').textContent = dossiersAffiches.length;
+
+        if (dossiersAffiches.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="no-results">Aucun dossier ne correspond aux critères sélectionnés.</td></tr>';
+            document.getElementById('filteredResultsSection').style.display = 'block';
+            return;
+        }
+
+        dossiersAffiches.forEach((d, index) => {
+            const tr = document.createElement('tr');
+            
+            let statusClass = 'status-attente';
+            if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
+            if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
+
+            let dateAffichee = '-';
+            if (d.date) {
+                const dateObj = new Date(d.date);
+                dateAffichee = dateObj.toLocaleDateString('fr-FR');
+            }
+
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${dateAffichee}</td>
+                <td>${d.assure || '-'}</td>
+                <td><strong>${d.immat || '-'}</strong></td>
+                <td>${d.sinistre || '-'}</td>
+                <td>${d.cabinet || '-'}</td>
+                <td>${formatMoney(d.montantRapport)}</td>
+                <td>${formatMoney(d.montantValide)}</td>
+                <td>${formatMoney(d.montantDevis)}</td>
+                <td><span class="status-badge ${statusClass}">${d.statut}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('filteredResultsSection').style.display = 'block';
+    }
+
+    function masquerTableauFiltre() {
+        document.getElementById('filteredResultsSection').style.display = 'none';
+    }
+
+    function exportFilteredCSV() {
+        if (dossiersFiltresActuels.length === 0) {
+            alert('Aucun dossier à exporter.');
+            return;
+        }
+
+        const headers = ['NB', 'Date', 'Assuré', 'Immatriculation', 'Sinistre', 'Expert', 'Montant Rapport', 'Montant Validé', 'Montant Devis', 'Statut'];
+        let csvContent = headers.join(';') + '\n';
+
+        dossiersFiltresActuels.forEach((d, index) => {
+            const row = [
+                index + 1,
+                `"${d.date || ''}"`,
+                `"${(d.assure || '').replace(/"/g, '""')}"`,
+                `"${d.immat || ''}"`,
+                `"${d.sinistre || ''}"`,
+                `"${d.cabinet || ''}"`,
+                d.montantRapport || 0,
+                d.montantValide || 0,
+                d.montantDevis || 0,
+                `"${d.statut || ''}"`
+            ];
+            csvContent += row.join(';') + '\n';
+        });
+
+        csvContent += '\n';
+        csvContent += `TOTAUX;;;;;;${dossiersFiltresActuels.reduce((a, d) => a + (d.montantRapport || 0), 0)};${dossiersFiltresActuels.reduce((a, d) => a + (d.montantValide || 0), 0)};${dossiersFiltresActuels.reduce((a, d) => a + (d.montantDevis || 0), 0)};\n`;
+
+        const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        const nomFiltre = [
+            document.getElementById('filtreStatutAnalyse').value || 'TousStatuts',
+            document.getElementById('filtreExpert').value || 'TousExperts'
+        ].join('_');
+        link.download = `filtre_${serviceActif}_${nomFiltre}_${new Date().toISOString().slice(0,10)}.csv`;
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function imprimerFiltres() {
+        if (dossiersFiltresActuels.length === 0) {
+            alert('Aucun dossier à imprimer.');
+            return;
+        }
+
+        const fenetre = window.open('', '_blank');
+        
+        const statut = document.getElementById('filtreStatutAnalyse').value || 'Tous les statuts';
+        const expert = document.getElementById('filtreExpert').value || 'Tous les experts';
+        const dateD = document.getElementById('dateDebut').value || '-';
+        const dateF = document.getElementById('dateFin').value || '-';
+        
+        const totalRapport = dossiersFiltresActuels.reduce((a, d) => a + (d.montantRapport || 0), 0);
+        const totalValide = dossiersFiltresActuels.reduce((a, d) => a + (d.montantValide || 0), 0);
+        const totalDevis = dossiersFiltresActuels.reduce((a, d) => a + (d.montantDevis || 0), 0);
+
+        let html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Impression - ${serviceActif}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; font-size: 11px; padding: 15px; }
+                    h1 { color: #2c3e50; font-size: 18px; }
+                    h2 { color: #34495e; font-size: 14px; margin-top: 20px; }
+                    .infos { margin: 10px 0; color: #555; }
+                    .infos span { display: inline-block; margin-right: 20px; }
+                    .totaux { background: #ecf0f1; padding: 10px; border-left: 4px solid #2c3e50; margin: 15px 0; display: flex; gap: 30px; flex-wrap: wrap; }
+                    .totaux div { font-weight: bold; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                    th, td { border: 1px solid #999; padding: 4px 6px; text-align: left; }
+                    th { background: #2c3e50; color: white; font-size: 10px; }
+                    tr:nth-child(even) { background: #f9f9f9; }
+                    .total-row { background: #ecf0f1 !important; font-weight: bold; }
+                    @media print { body { padding: 0; } @page { margin: 10mm; } }
+                </style>
+            </head>
+            <body>
+                <h1>📋 Suivi des Rapports d'Expertise - Service ${serviceActif}</h1>
+                <h2>Résultats filtrés</h2>
+                <div class="infos">
+                    <span><strong>Statut :</strong> ${statut}</span>
+                    <span><strong>Expert :</strong> ${expert}</span>
+                    <span><strong>Du :</strong> ${dateD}</span>
+                    <span><strong>Au :</strong> ${dateF}</span>
+                </div>
+                <div class="totaux">
+                    <div>Dossiers : ${dossiersFiltresActuels.length}</div>
+                    <div>Total Rapports : ${formatMoney(totalRapport)}</div>
+                    <div>Total Validés : ${formatMoney(totalValide)}</div>
+                    <div>Total Devis : ${formatMoney(totalDevis)}</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NB</th><th>Date</th><th>Assuré</th><th>Immatriculation</th>
+                            <th>Sinistre</th><th>Expert</th><th>Montant Rapport</th>
+                            <th>Montant Validé</th><th>Montant Devis</th><th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        dossiersFiltresActuels.forEach((d, index) => {
+            const dateObj = d.date ? new Date(d.date) : null;
+            const dateAffichee = dateObj ? dateObj.toLocaleDateString('fr-FR') : '-';
+            html += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${dateAffichee}</td>
+                    <td>${d.assure || '-'}</td>
+                    <td>${d.immat || '-'}</td>
+                    <td>${d.sinistre || '-'}</td>
+                    <td>${d.cabinet || '-'}</td>
+                    <td>${formatMoney(d.montantRapport)}</td>
+                    <td>${formatMoney(d.montantValide)}</td>
+                    <td>${formatMoney(d.montantDevis)}</td>
+                    <td>${d.statut || '-'}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="6">TOTAUX</td>
+                            <td>${formatMoney(totalRapport)}</td>
+                            <td>${formatMoney(totalValide)}</td>
+                            <td>${formatMoney(totalDevis)}</td>
+                            <td>-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <p style="margin-top: 20px; font-size: 10px; color: #777;">
+                    Document généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}
+                </p>
+                <script>
+                    window.onload = function() { window.print(); }
+                <\/script>
+            </body>
+            </html>
+        `;
+
+        fenetre.document.write(html);
+        fenetre.document.close();
     }
 
     function resetAnalyse() {
@@ -1006,6 +1325,7 @@
         document.getElementById('dateDebut').value = '';
         document.getElementById('dateFin').value = '';
         document.getElementById('reportingResults').style.display = 'none';
+        document.getElementById('filteredResultsSection').style.display = 'none';
         document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
     }
 
@@ -1023,7 +1343,7 @@
     }
 
     async function clearAll() {
-        if (!confirm(`⚠️ ATTENTION ! Cela supprimera TOUS les dossiers du service ${serviceActif}.\n\nCette action est IRRÉVERSIBLE.\n\nÊtes-vous vraiment sûr ?`)) return;
+        if (!confirm(`⚠️ ATTENTION ! Cela supprimera TOUS les dossiers du service ${serviceActif}.\n\nCette action est IRRÉVERSIBLE.`)) return;
         if (!confirm(`Dernière confirmation : supprimer tous les dossiers ${serviceActif} ?`)) return;
 
         try {
@@ -1031,7 +1351,6 @@
             const batch = writeBatch(db);
             aSupprimer.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
             await batch.commit();
-            console.log(`✅ ${aSupprimer.length} dossiers supprimés`);
         } catch (err) {
             console.error("Erreur:", err);
             alert("Erreur lors de la suppression.");
@@ -1042,7 +1361,7 @@
     document.getElementById('filterStatut').addEventListener('change', renderTable);
 
     // ============================================================
-    // EXPORT CSV
+    // EXPORT CSV GLOBAL
     // ============================================================
     function exportCSV() {
         if (dossiers.length === 0) { alert('Aucune donnée à exporter.'); return; }
@@ -1065,198 +1384,175 @@
     }
 
     // ============================================================
-// IMPORT CSV ULTRA-INTELLIGENT (détecte automatiquement le format)
-// ============================================================
-async function importCSV(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        let contenu = e.target.result;
+    // IMPORT CSV INTELLIGENT
+    // ============================================================
+    async function importCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
         
-        // Détection du séparateur (; ou ,)
-        const premiereLigne = contenu.split('\n')[0];
-        const nbPointsVirgules = (premiereLigne.match(/;/g) || []).length;
-        const nbVirgules = (premiereLigne.match(/,/g) || []).length;
-        const separateur = nbPointsVirgules >= nbVirgules ? ';' : ',';
-        console.log(`📊 Séparateur détecté : "${separateur}" (${nbPointsVirgules} ; vs ${nbVirgules} ,)`);
-        
-        const lines = contenu.split('\n');
-        const dossiersImportes = [];
-        let lignesIgnorees = 0;
-        
-        // Analyser l'en-tête pour comprendre le format
-        const entete = lines[0].split(separateur).map(c => c.trim().replace(/^"|"$/g, '').toLowerCase());
-        console.log('📋 En-tête détecté :', entete);
-        
-        // Détection automatique de la structure
-        const aColonneID = entete[0] === 'id';
-        const aColonneService = entete[1] === 'service';
-        const aColonneNB = entete[0] === 'nb';
-        
-        console.log(`🔍 Structure détectée : ID=${aColonneID}, Service=${aColonneService}, NB=${aColonneNB}`);
-        
-        // Calcul de l'offset (combien de colonnes ignorer au début)
-        let offset = 0;
-        if (aColonneID) offset++;
-        if (aColonneService) offset++;
-        if (aColonneNB) offset++;
-        
-        console.log(`➡️ Offset appliqué : ${offset} colonnes à ignorer`);
-        
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            let contenu = e.target.result;
             
-            // Séparation selon le séparateur détecté
-            const cols = line.split(separateur);
+            const premiereLigne = contenu.split('\n')[0];
+            const nbPointsVirgules = (premiereLigne.match(/;/g) || []).length;
+            const nbVirgules = (premiereLigne.match(/,/g) || []).length;
+            const separateur = nbPointsVirgules >= nbVirgules ? ';' : ',';
+            console.log(`📊 Séparateur détecté : "${separateur}"`);
             
-            // Vérification : il faut au moins 17 colonnes de données après l'offset
-            if (cols.length < 17 + offset) {
-                lignesIgnorees++;
-                continue;
-            }
+            const lines = contenu.split('\n');
+            const dossiersImportes = [];
+            let lignesIgnorees = 0;
             
-            // Récupérer le service si présent, sinon celui actif
-            let serviceDossier = serviceActif;
-            if (aColonneService && cols[1]) {
-                const serviceLu = cols[1].replace(/^"|"$/g, '').toUpperCase();
-                if (serviceLu === 'HR' || serviceLu === 'UM' || serviceLu === 'UNICARS') {
-                    serviceDossier = serviceLu;
+            const entete = lines[0].split(separateur).map(c => c.trim().replace(/^"|"$/g, '').toLowerCase());
+            console.log('📋 En-tête :', entete);
+            
+            const aColonneID = entete[0] === 'id';
+            const aColonneService = entete[1] === 'service';
+            const aColonneNB = entete[0] === 'nb';
+            
+            let offset = 0;
+            if (aColonneID) offset++;
+            if (aColonneService) offset++;
+            if (aColonneNB) offset++;
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const cols = line.split(separateur);
+                
+                if (cols.length < 17 + offset) {
+                    lignesIgnorees++;
+                    continue;
                 }
+                
+                let serviceDossier = serviceActif;
+                if (aColonneService && cols[1]) {
+                    const serviceLu = cols[1].replace(/^"|"$/g, '').toUpperCase();
+                    if (serviceLu === 'HR' || serviceLu === 'UM' || serviceLu === 'UNICARS') {
+                        serviceDossier = serviceLu;
+                    }
+                }
+                
+                const nettoyer = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+                
+                dossiersImportes.push({
+                    service: serviceDossier,
+                    assure: nettoyer(cols[offset + 0]),
+                    vehicule: nettoyer(cols[offset + 1]),
+                    type: nettoyer(cols[offset + 2]),
+                    immat: nettoyer(cols[offset + 3]),
+                    sinistre: nettoyer(cols[offset + 4]),
+                    assureur: nettoyer(cols[offset + 5]),
+                    photoAvt: nettoyer(cols[offset + 6]),
+                    photoAp: nettoyer(cols[offset + 7]),
+                    date: nettoyer(cols[offset + 8]),
+                    livraison: nettoyer(cols[offset + 9]),
+                    cabinet: nettoyer(cols[offset + 10]),
+                    montantRapport: parseFloat(cols[offset + 11]) || 0,
+                    rapportValide: nettoyer(cols[offset + 12]) || 'Non',
+                    montantValide: parseFloat(cols[offset + 13]) || 0,
+                    montantDevis: parseFloat(cols[offset + 14]) || 0,
+                    commentaire: nettoyer(cols[offset + 15]),
+                    statut: nettoyer(cols[offset + 16]) || 'EN ATTENTE DE RAPPORT'
+                });
             }
             
-            // Nettoyer une valeur
-            const nettoyer = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+            console.log(`✅ ${dossiersImportes.length} dossiers valides`);
             
-            dossiersImportes.push({
-                service: serviceDossier,
-                assure: nettoyer(cols[offset + 0]),
-                vehicule: nettoyer(cols[offset + 1]),
-                type: nettoyer(cols[offset + 2]),
-                immat: nettoyer(cols[offset + 3]),
-                sinistre: nettoyer(cols[offset + 4]),
-                assureur: nettoyer(cols[offset + 5]),
-                photoAvt: nettoyer(cols[offset + 6]),
-                photoAp: nettoyer(cols[offset + 7]),
-                date: nettoyer(cols[offset + 8]),
-                livraison: nettoyer(cols[offset + 9]),
-                cabinet: nettoyer(cols[offset + 10]),
-                montantRapport: parseFloat(cols[offset + 11]) || 0,
-                rapportValide: nettoyer(cols[offset + 12]) || 'Non',
-                montantValide: parseFloat(cols[offset + 13]) || 0,
-                montantDevis: parseFloat(cols[offset + 14]) || 0,
-                commentaire: nettoyer(cols[offset + 15]),
-                statut: nettoyer(cols[offset + 16]) || 'EN ATTENTE DE RAPPORT'
-            });
-        }
-        
-        console.log(`✅ ${dossiersImportes.length} dossiers valides, ${lignesIgnorees} lignes ignorées`);
-        
-        if (dossiersImportes.length === 0) {
-            alert(`❌ Aucun dossier valide trouvé dans le fichier.\n\n` +
-                  `Diagnostic :\n` +
-                  `- Séparateur détecté : "${separateur}"\n` +
-                  `- Nombre de colonnes en-tête : ${entete.length}\n` +
-                  `- Colonnes attendues : 18 ou 19\n\n` +
-                  `Vérifiez que votre fichier est bien un export de cette application.`);
+            if (dossiersImportes.length === 0) {
+                alert(`❌ Aucun dossier valide trouvé.\nSéparateur : "${separateur}"\nColonnes : ${entete.length}`);
+                event.target.value = '';
+                return;
+            }
+            
+            const apercu = dossiersImportes.slice(0, 3).map((d, i) => 
+                `${i+1}. ${d.immat || '(sans immat)'} - ${d.assure || '(sans nom)'} - ${d.service}`
+            ).join('\n');
+            
+            const choix = prompt(
+                `📁 ${dossiersImportes.length} dossiers trouvés.\n` +
+                `Séparateur : "${separateur}" | Structure : ${aColonneID ? 'Nouvelle' : 'Ancienne'}\n\n` +
+                `Aperçu :\n${apercu}\n\n` +
+                `1 = FUSIONNER (éviter les doublons)\n` +
+                `2 = REMPLACER (effacer le service "${serviceActif}")\n` +
+                `3 = AJOUTER TOUT\n` +
+                `4 = ANNULER`
+            );
+            
+            try {
+                if (choix === '1') {
+                    const empreintesExistantes = new Set(
+                        tousLesDossiers.map(d => 
+                            `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`
+                        )
+                    );
+                    
+                    const nouveaux = dossiersImportes.filter(d => {
+                        const empreinte = `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`;
+                        return !empreintesExistantes.has(empreinte);
+                    });
+                    
+                    if (nouveaux.length === 0) {
+                        alert(`ℹ️ Tous les dossiers sont déjà présents.`);
+                        event.target.value = '';
+                        return;
+                    }
+                    
+                    const batch = writeBatch(db);
+                    nouveaux.forEach(d => {
+                        const newRef = doc(collection(db, 'dossiers'));
+                        d.createdAt = new Date().toISOString();
+                        d.updatedAt = d.createdAt;
+                        batch.set(newRef, d);
+                    });
+                    await batch.commit();
+                    
+                    alert(`✅ Fusion réussie !\n- ${nouveaux.length} ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
+                    
+                } else if (choix === '2') {
+                    if (!confirm(`⚠️ REMPLACER toutes les données du service ${serviceActif} ?`)) {
+                        event.target.value = '';
+                        return;
+                    }
+                    
+                    const batch = writeBatch(db);
+                    dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
+                    
+                    dossiersImportes.forEach(d => {
+                        const newRef = doc(collection(db, 'dossiers'));
+                        d.service = serviceActif;
+                        d.createdAt = new Date().toISOString();
+                        d.updatedAt = d.createdAt;
+                        batch.set(newRef, d);
+                    });
+                    await batch.commit();
+                    
+                    alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés.`);
+                    
+                } else if (choix === '3') {
+                    const batch = writeBatch(db);
+                    dossiersImportes.forEach(d => {
+                        const newRef = doc(collection(db, 'dossiers'));
+                        d.createdAt = new Date().toISOString();
+                        d.updatedAt = d.createdAt;
+                        batch.set(newRef, d);
+                    });
+                    await batch.commit();
+                    
+                    alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
+                }
+                
+            } catch (err) {
+                console.error("Erreur import:", err);
+                alert("❌ Erreur :\n" + err.message);
+            }
+            
             event.target.value = '';
-            return;
-        }
-        
-        // Aperçu avant import
-        const apercu = dossiersImportes.slice(0, 3).map((d, i) => 
-            `${i+1}. ${d.immat || '(sans immat)'} - ${d.assure || '(sans nom)'} - ${d.service}`
-        ).join('\n');
-        
-        const choix = prompt(
-            `📁 ${dossiersImportes.length} dossiers trouvés.\n` +
-            `Séparateur : "${separateur}" | Structure : ${aColonneID ? 'Nouvelle (avec ID)' : 'Ancienne (avec NB)'}\n\n` +
-            `Aperçu des 3 premiers :\n${apercu}\n\n` +
-            `Que voulez-vous faire ?\n\n` +
-            `1 = FUSIONNER (ajouter seulement les nouveaux, éviter les doublons)\n` +
-            `2 = REMPLACER (effacer le service "${serviceActif}" et mettre les nouvelles données)\n` +
-            `3 = AJOUTER TOUT (ajouter même les doublons)\n` +
-            `4 = ANNULER`
-        );
-        
-        try {
-            if (choix === '1') {
-                // FUSION avec détection de doublons
-                const empreintesExistantes = new Set(
-                    tousLesDossiers.map(d => 
-                        `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`
-                    )
-                );
-                
-                const nouveaux = dossiersImportes.filter(d => {
-                    const empreinte = `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`;
-                    return !empreintesExistantes.has(empreinte);
-                });
-                
-                if (nouveaux.length === 0) {
-                    alert(`ℹ️ Tous les dossiers du fichier sont déjà présents. Aucun ajout effectué.`);
-                    event.target.value = '';
-                    return;
-                }
-                
-                const batch = writeBatch(db);
-                nouveaux.forEach(d => {
-                    const newRef = doc(collection(db, 'dossiers'));
-                    d.createdAt = new Date().toISOString();
-                    d.updatedAt = d.createdAt;
-                    batch.set(newRef, d);
-                });
-                await batch.commit();
-                
-                alert(`✅ Fusion réussie !\n\n- ${nouveaux.length} nouveaux dossiers ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
-                
-            } else if (choix === '2') {
-                if (!confirm(`⚠️ REMPLACER toutes les données du service ${serviceActif} ?\n\nCela supprimera ${dossiers.length} dossier(s) existant(s).`)) {
-                    event.target.value = '';
-                    return;
-                }
-                
-                // Supprimer les dossiers existants du service actif
-                const batch = writeBatch(db);
-                dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
-                
-                // Ajouter les nouveaux (forcer le service actif pour éviter les mélanges)
-                dossiersImportes.forEach(d => {
-                    const newRef = doc(collection(db, 'dossiers'));
-                    d.service = serviceActif; // ← Force le service actif
-                    d.createdAt = new Date().toISOString();
-                    d.updatedAt = d.createdAt;
-                    batch.set(newRef, d);
-                });
-                await batch.commit();
-                
-                alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés dans ${serviceActif}.`);
-                
-            } else if (choix === '3') {
-                const batch = writeBatch(db);
-                dossiersImportes.forEach(d => {
-                    const newRef = doc(collection(db, 'dossiers'));
-                    d.createdAt = new Date().toISOString();
-                    d.updatedAt = d.createdAt;
-                    batch.set(newRef, d);
-                });
-                await batch.commit();
-                
-                alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
-            }
-            // Si choix = 4 ou fermeture de la boîte, on ne fait rien
-            
-        } catch (err) {
-            console.error("Erreur import:", err);
-            alert("❌ Erreur lors de l'import :\n" + err.message);
-        }
-        
-        event.target.value = '';
-    };
-    reader.readAsText(file, 'UTF-8');
-}
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
 </script>
 
 </body>
