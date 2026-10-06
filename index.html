@@ -344,6 +344,84 @@
             font-style: italic;
         }
 
+        /* 🆕 Légende des couleurs */
+        .legende-couleurs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            align-items: center;
+        }
+
+        .legende-titre {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legende-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #555;
+        }
+
+        .legende-pastille {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .legende-pastille.orange { background: #fdebd0; border-color: #f39c12; }
+        .legende-pastille.rouge { background: #fadbd8; border-color: #e74c3c; }
+        .legende-pastille.normal { background: #ffffff; border-color: #ddd; }
+
+        /* 🆕 Barre de tri */
+        .tri-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .tri-bar label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tri-bar select {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .tri-bar .tri-info {
+            margin-left: auto;
+            color: #7f8c8d;
+            font-size: 12px;
+            font-style: italic;
+        }
+
         .toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -397,6 +475,15 @@
         tr.alerte-orange { background-color: #fdebd0 !important; }
         tr.alerte-orange td { color: #9c640c; }
 
+        /* Animation nouveau dossier */
+        @keyframes nouveauDossier {
+            0% { background-color: #d5f4e6; transform: scale(1.01); }
+            100% { background-color: transparent; transform: scale(1); }
+        }
+        tr.nouveau-dossier {
+            animation: nouveauDossier 3s ease-out;
+        }
+
         .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .status-attente { background-color: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
         .status-cours { background-color: #e8f4fd; color: #2980b9; border: 1px solid #2980b9; }
@@ -436,7 +523,7 @@
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; }
-            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status, .filtered-results-actions { display: none !important; }
+            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status, .filtered-results-actions, .tri-bar { display: none !important; }
             .dashboard { background: white; border: 1px solid #ccc; }
             .stat-card { border: 1px solid #ccc; box-shadow: none; }
             .table-responsive { overflow: visible; border: none; }
@@ -445,6 +532,7 @@
             th { background-color: #ddd !important; color: #000 !important; -webkit-print-color-adjust: exact; }
             tr.alerte-rouge { background-color: #fadbd8 !important; -webkit-print-color-adjust: exact; }
             tr.alerte-orange { background-color: #fdebd0 !important; -webkit-print-color-adjust: exact; }
+            .legende-couleurs { border: 1px solid #ccc; }
         }
 
         @media (max-width: 768px) {
@@ -452,6 +540,8 @@
             .form-grid { grid-template-columns: 1fr; }
             .header-top { flex-direction: column; gap: 10px; }
             .service-btn { padding: 8px 12px; font-size: 12px; }
+            .legende-couleurs { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .tri-bar { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -566,7 +656,6 @@
             </div>
         </div>
 
-        <!-- 🆕 Tableau des dossiers filtrés -->
         <div class="filtered-results-section" id="filteredResultsSection" style="display:none;">
             <div class="filtered-results-header">
                 <h4>
@@ -622,6 +711,40 @@
         <input type="file" id="importFile" style="display: none;" accept=".csv" onchange="importCSV(event)">
         <button class="btn-info" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
         <button class="btn-danger" onclick="clearAll()"><i class="fas fa-trash"></i> Vider le service</button>
+    </div>
+
+    <!-- 🆕 Légende des couleurs -->
+    <div class="legende-couleurs">
+        <div class="legende-titre">
+            <i class="fas fa-info-circle"></i> Signification des couleurs :
+        </div>
+        <div class="legende-item">
+            <span class="legende-pastille orange"></span>
+            <span>Orange : En attente depuis <strong>plus de 15 jours</strong></span>
+        </div>
+        <div class="legende-item">
+            <span class="legende-pastille rouge"></span>
+            <span>Rouge : En attente depuis <strong>plus de 30 jours</strong></span>
+        </div>
+        <div class="legende-item">
+            <span class="legende-pastille normal"></span>
+            <span>Normal : Dossier récent ou déjà validé</span>
+        </div>
+    </div>
+
+    <!-- 🆕 Barre de tri -->
+    <div class="tri-bar">
+        <label>
+            <i class="fas fa-sort"></i> Trier par :
+            <select id="triSelect" onchange="changerTri()">
+                <option value="date_desc">📅 Date du dossier (plus récent en haut)</option>
+                <option value="date_asc">📅 Date du dossier (plus ancien en haut)</option>
+                <option value="created_desc">🆕 Date d'ajout (dernier ajouté en haut)</option>
+                <option value="assure_asc">🔤 Assuré (A → Z)</option>
+                <option value="montant_desc">💰 Montant Rapport (élevé → faible)</option>
+            </select>
+        </label>
+        <span class="tri-info" id="triInfo"></span>
     </div>
 
     <div class="table-responsive">
@@ -725,15 +848,14 @@
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     // ⚠️⚠️⚠️ REMPLACEZ CE BLOC PAR LA CONFIGURATION DE VOTRE PROJET FIREBASE ⚠️⚠️⚠️
-   const firebaseConfig = {
-  apiKey: "AIzaSyAxfEpi-NERVExxVYD2EmH7JppiIQDwWOM",
-  authDomain: "ntr-garage.firebaseapp.com",
-  databaseURL: "https://ntr-garage-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ntr-garage",
-  storageBucket: "ntr-garage.firebasestorage.app",
-  messagingSenderId: "606167388967",
-  appId: "1:606167388967:web:7ad669fd353cdeeb7a8f02"
-};
+    const firebaseConfig = {
+        apiKey: "VOTRE_API_KEY",
+        authDomain: "VOTRE_PROJET.firebaseapp.com",
+        projectId: "VOTRE_PROJET_ID",
+        storageBucket: "VOTRE_PROJET.appspot.com",
+        messagingSenderId: "VOTRE_SENDER_ID",
+        appId: "VOTRE_APP_ID"
+    };
     // ⚠️⚠️⚠️ FIN DU BLOC À REMPLACER ⚠️⚠️⚠️
 
     const app = initializeApp(firebaseConfig);
@@ -773,6 +895,10 @@
     let unsubscribeSnapshot = null;
     let deferredPrompt = null;
     let dossiersFiltresActuels = [];
+    
+    // 🆕 Gestion du tri
+    let modeTriActuel = localStorage.getItem('modeTri') || 'date_desc';
+    let dossierNouvellementAjoute = null; // Pour l'animation
 
     // ============================================================
     // PWA
@@ -834,6 +960,11 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         updateConnectionStatus();
+        
+        // Restaurer le mode de tri
+        document.getElementById('triSelect').value = modeTriActuel;
+        mettreAJourTriInfo();
+        
         setTimeout(() => {
             if (!firebasePret) {
                 console.warn("Firebase non initialisé, mode local");
@@ -889,6 +1020,62 @@
     }
 
     // ============================================================
+    // 🆕 GESTION DU TRI
+    // ============================================================
+    function changerTri() {
+        modeTriActuel = document.getElementById('triSelect').value;
+        localStorage.setItem('modeTri', modeTriActuel);
+        mettreAJourTriInfo();
+        renderTable();
+    }
+
+    function mettreAJourTriInfo() {
+        const info = document.getElementById('triInfo');
+        const textes = {
+            'date_desc': '📅 Les plus récents en premier',
+            'date_asc': '📅 Les plus anciens en premier',
+            'created_desc': '🆕 Dernier ajouté en haut',
+            'assure_asc': '🔤 Ordre alphabétique',
+            'montant_desc': '💰 Montants élevés en premier'
+        };
+        info.textContent = textes[modeTriActuel] || '';
+    }
+
+    function trierDossiers(liste) {
+        const copie = [...liste];
+        switch(modeTriActuel) {
+            case 'date_desc':
+                return copie.sort((a, b) => {
+                    if (!a.date) return 1;
+                    if (!b.date) return -1;
+                    return new Date(b.date) - new Date(a.date);
+                });
+            case 'date_asc':
+                return copie.sort((a, b) => {
+                    if (!a.date) return 1;
+                    if (!b.date) return -1;
+                    return new Date(a.date) - new Date(b.date);
+                });
+            case 'created_desc':
+                return copie.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+                    return dateB - dateA;
+                });
+            case 'assure_asc':
+                return copie.sort((a, b) => {
+                    const nomA = (a.assure || '').toLowerCase();
+                    const nomB = (b.assure || '').toLowerCase();
+                    return nomA.localeCompare(nomB);
+                });
+            case 'montant_desc':
+                return copie.sort((a, b) => (b.montantRapport || 0) - (a.montantRapport || 0));
+            default:
+                return copie;
+        }
+    }
+
+    // ============================================================
     // CRUD
     // ============================================================
     function openModal() {
@@ -930,9 +1117,14 @@
 
         try {
             if (!editId) {
+                // Ajout
                 dossierData.createdAt = new Date().toISOString();
-                await addDoc(collection(db, 'dossiers'), dossierData);
+                const docRef = await addDoc(collection(db, 'dossiers'), dossierData);
+                // 🆕 Marquer pour animation
+                dossierNouvellementAjoute = docRef.id;
+                console.log("✅ Dossier ajouté avec animation");
             } else {
+                // Modification
                 await updateDoc(doc(db, 'dossiers', editId), dossierData);
             }
             closeModal();
@@ -990,7 +1182,7 @@
         tbody.innerHTML = '';
         const today = new Date();
 
-        const filteredDossiers = dossiers.filter(d => {
+        let filteredDossiers = dossiers.filter(d => {
             const matchesSearch = 
                 (d.assure || '').toLowerCase().includes(searchTerm) ||
                 (d.immat || '').toLowerCase().includes(searchTerm) ||
@@ -1000,6 +1192,9 @@
             const matchesStatut = filterStatut === '' || d.statut === filterStatut;
             return matchesSearch && matchesStatut;
         });
+
+        // 🆕 Appliquer le tri
+        filteredDossiers = trierDossiers(filteredDossiers);
 
         filteredDossiers.forEach((d, index) => {
             const tr = document.createElement('tr');
@@ -1017,6 +1212,16 @@
             }
 
             tr.className = alerteClass;
+            
+            // 🆕 Animation pour nouveau dossier
+            if (dossierNouvellementAjoute && d.firebaseId === dossierNouvellementAjoute) {
+                tr.classList.add('nouveau-dossier');
+                // Retirer le marqueur après l'animation
+                setTimeout(() => {
+                    dossierNouvellementAjoute = null;
+                }, 3000);
+            }
+
             let statusClass = 'status-attente';
             if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
@@ -1099,6 +1304,7 @@
             dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) <= fin);
         }
 
+        // Trier par date décroissante pour l'affichage des filtres
         dossiersFiltres.sort((a, b) => {
             if (!a.date) return 1;
             if (!b.date) return -1;
@@ -1403,10 +1609,8 @@
             
             const lines = contenu.split('\n');
             const dossiersImportes = [];
-            let lignesIgnorees = 0;
             
             const entete = lines[0].split(separateur).map(c => c.trim().replace(/^"|"$/g, '').toLowerCase());
-            console.log('📋 En-tête :', entete);
             
             const aColonneID = entete[0] === 'id';
             const aColonneService = entete[1] === 'service';
@@ -1422,11 +1626,7 @@
                 if (!line) continue;
                 
                 const cols = line.split(separateur);
-                
-                if (cols.length < 17 + offset) {
-                    lignesIgnorees++;
-                    continue;
-                }
+                if (cols.length < 17 + offset) continue;
                 
                 let serviceDossier = serviceActif;
                 if (aColonneService && cols[1]) {
@@ -1460,22 +1660,14 @@
                 });
             }
             
-            console.log(`✅ ${dossiersImportes.length} dossiers valides`);
-            
             if (dossiersImportes.length === 0) {
-                alert(`❌ Aucun dossier valide trouvé.\nSéparateur : "${separateur}"\nColonnes : ${entete.length}`);
+                alert(`❌ Aucun dossier valide trouvé.`);
                 event.target.value = '';
                 return;
             }
             
-            const apercu = dossiersImportes.slice(0, 3).map((d, i) => 
-                `${i+1}. ${d.immat || '(sans immat)'} - ${d.assure || '(sans nom)'} - ${d.service}`
-            ).join('\n');
-            
             const choix = prompt(
-                `📁 ${dossiersImportes.length} dossiers trouvés.\n` +
-                `Séparateur : "${separateur}" | Structure : ${aColonneID ? 'Nouvelle' : 'Ancienne'}\n\n` +
-                `Aperçu :\n${apercu}\n\n` +
+                `📁 ${dossiersImportes.length} dossiers trouvés.\n\n` +
                 `1 = FUSIONNER (éviter les doublons)\n` +
                 `2 = REMPLACER (effacer le service "${serviceActif}")\n` +
                 `3 = AJOUTER TOUT\n` +
@@ -1489,7 +1681,6 @@
                             `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`
                         )
                     );
-                    
                     const nouveaux = dossiersImportes.filter(d => {
                         const empreinte = `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`;
                         return !empreintesExistantes.has(empreinte);
@@ -1517,10 +1708,8 @@
                         event.target.value = '';
                         return;
                     }
-                    
                     const batch = writeBatch(db);
                     dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
-                    
                     dossiersImportes.forEach(d => {
                         const newRef = doc(collection(db, 'dossiers'));
                         d.service = serviceActif;
@@ -1529,7 +1718,6 @@
                         batch.set(newRef, d);
                     });
                     await batch.commit();
-                    
                     alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés.`);
                     
                 } else if (choix === '3') {
@@ -1541,7 +1729,6 @@
                         batch.set(newRef, d);
                     });
                     await batch.commit();
-                    
                     alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
                 }
                 
