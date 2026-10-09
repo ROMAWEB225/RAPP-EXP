@@ -26,6 +26,8 @@
             --unicars-color: #7f8c8d;
         }
 
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -33,6 +35,110 @@
             margin: 0;
             padding: 15px;
         }
+
+        /* ============================================================ */
+        /* ÉCRAN DE CONNEXION */
+        /* ============================================================ */
+        #loginScreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-box .logo {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .login-box h1 {
+            color: var(--primary-color);
+            font-size: 22px;
+            margin: 0 0 5px 0;
+        }
+
+        .login-box .subtitle {
+            color: #7f8c8d;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 13px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-box button:hover { background: var(--secondary-color); }
+        .login-box button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .login-error {
+            color: var(--danger-color);
+            font-size: 13px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fadbd8;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .login-error.visible { display: block; }
+
+        .login-info {
+            font-size: 11px;
+            color: #95a5a6;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+
+        /* ============================================================ */
+        /* APPLICATION PRINCIPALE */
+        /* ============================================================ */
+        #appContainer { display: none; }
+        #appContainer.visible { display: block; }
 
         h1, h2, h3 { color: var(--primary-color); margin-bottom: 10px; }
 
@@ -58,6 +164,44 @@
         .connection-status.online { background: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
         .connection-status.offline { background: #fadbd8; color: #e74c3c; border: 1px solid #e74c3c; }
 
+        .user-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #ecf0f1;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .user-badge .role-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .role-badge.admin { background: #e74c3c; color: white; }
+        .role-badge.user { background: #3498db; color: white; }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-logout:hover { background: #c0392b; }
+
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -66,6 +210,7 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--border-color);
+            gap: 15px;
         }
 
         .service-selector {
@@ -226,7 +371,6 @@
         .reporting-card h5 { margin: 0 0 5px 0; font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; }
         .reporting-card p { margin: 0; font-size: 1.3em; font-weight: bold; color: var(--primary-color); }
 
-        /* Tableau des résultats filtrés */
         .filtered-results-section {
             margin-top: 20px;
             padding-top: 20px;
@@ -333,9 +477,7 @@
             border-bottom: 1px solid #eee;
         }
 
-        .filtered-table-container tr:hover {
-            background: #f8f9fa;
-        }
+        .filtered-table-container tr:hover { background: #f8f9fa; }
 
         .no-results {
             text-align: center;
@@ -344,7 +486,6 @@
             font-style: italic;
         }
 
-        /* 🆕 Légende des couleurs */
         .legende-couleurs {
             display: flex;
             flex-wrap: wrap;
@@ -385,7 +526,6 @@
         .legende-pastille.rouge { background: #fadbd8; border-color: #e74c3c; }
         .legende-pastille.normal { background: #ffffff; border-color: #ddd; }
 
-        /* 🆕 Barre de tri */
         .tri-bar {
             display: flex;
             flex-wrap: wrap;
@@ -475,7 +615,6 @@
         tr.alerte-orange { background-color: #fdebd0 !important; }
         tr.alerte-orange td { color: #9c640c; }
 
-        /* Animation nouveau dossier */
         @keyframes nouveauDossier {
             0% { background-color: #d5f4e6; transform: scale(1.01); }
             100% { background-color: transparent; transform: scale(1); }
@@ -523,7 +662,7 @@
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; padding: 0; max-width: 100%; }
-            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status, .filtered-results-actions, .tri-bar { display: none !important; }
+            .toolbar, .actions-cell, .modal, .reporting-filters, .service-selector, .save-indicator, .quick-buttons, .ad-banner, .install-banner, .connection-status, .filtered-results-actions, .tri-bar, .btn-logout, .user-badge { display: none !important; }
             .dashboard { background: white; border: 1px solid #ccc; }
             .stat-card { border: 1px solid #ccc; box-shadow: none; }
             .table-responsive { overflow: visible; border: none; }
@@ -547,6 +686,35 @@
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- ÉCRAN DE CONNEXION -->
+<!-- ============================================================ -->
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="logo"><i class="fas fa-shield-alt"></i></div>
+        <h1>Suivi Expertise</h1>
+        <p class="subtitle">Connectez-vous pour accéder à l'application</p>
+        
+        <input type="email" id="loginEmail" placeholder="📧 Votre email" autocomplete="email">
+        <input type="password" id="loginPassword" placeholder="🔒 Mot de passe" autocomplete="current-password">
+        
+        <button id="loginBtn" onclick="seConnecter()">
+            <i class="fas fa-sign-in-alt"></i> Se connecter
+        </button>
+        
+        <div id="loginError" class="login-error"></div>
+        
+        <p class="login-info">
+            Accès réservé aux utilisateurs autorisés.<br>
+            Contactez Romaric Tanoh pour obtenir un accès.
+        </p>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- APPLICATION PRINCIPALE -->
+<!-- ============================================================ -->
+<div id="appContainer">
 <div class="container">
     <div class="header-top">
         <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -554,6 +722,19 @@
             <div id="saveIndicator" class="save-indicator"><i class="fas fa-check-circle"></i> Sauvegardé</div>
             <div id="connectionStatus" class="connection-status online"><i class="fas fa-cloud"></i> En ligne</div>
         </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <div class="user-badge" id="userBadge">
+                <i class="fas fa-user-circle"></i>
+                <span id="userName">Utilisateur</span>
+                <span class="role-badge" id="userRole">User</span>
+            </div>
+            <button class="btn-logout" onclick="seDeconnecter()">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
+    </div>
+
+    <div class="header-top" style="border-bottom:none; padding-bottom:0; margin-bottom:10px;">
         <div class="service-selector">
             <button id="btnHR" class="service-btn active-hr" onclick="changerService('HR')">🔴 HR</button>
             <button id="btnUM" class="service-btn" onclick="changerService('UM')">🔵 UM</button>
@@ -566,7 +747,6 @@
         <button onclick="installerPWA()">Installer</button>
     </div>
 
-    <!-- Bannière publicitaire haut -->
     <div class="ad-banner">
         <div class="ad-label">Publicité</div>
         <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
@@ -711,10 +891,9 @@
         <button class="btn-warning" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Importer</button>
         <input type="file" id="importFile" style="display: none;" accept=".csv" onchange="importCSV(event)">
         <button class="btn-info" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
-        <button class="btn-danger" onclick="clearAll()"><i class="fas fa-trash"></i> Vider le service</button>
+        <button class="btn-danger admin-only" id="btnClearAll" onclick="clearAll()" style="display:none;"><i class="fas fa-trash"></i> Vider le service</button>
     </div>
 
-    <!-- 🆕 Légende des couleurs -->
     <div class="legende-couleurs">
         <div class="legende-titre">
             <i class="fas fa-info-circle"></i> Signification des couleurs :
@@ -733,7 +912,6 @@
         </div>
     </div>
 
-    <!-- 🆕 Barre de tri -->
     <div class="tri-bar">
         <label>
             <i class="fas fa-sort"></i> Trier par :
@@ -777,11 +955,11 @@
         </table>
     </div>
 
-    <!-- Bannière publicitaire bas -->
     <div class="ad-banner">
         <div class="ad-label">Publicité</div>
         <div>Emplacement publicitaire - <a href="#">Votre partenaire ici</a></div>
     </div>
+</div>
 </div>
 
 <!-- Modal -->
@@ -840,29 +1018,32 @@
 </div>
 
 <!-- ============================================================== -->
-<!-- CONFIGURATION FIREBASE - REMPLACEZ PAR VOS VRAIES CLÉS -->
+<!-- FIREBASE -->
 <!-- ============================================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
         getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, 
-        onSnapshot, query, where, getDocs, writeBatch, enableIndexedDbPersistence 
+        onSnapshot, query, where, getDocs, writeBatch, enableIndexedDbPersistence, getDoc 
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import {
+        getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     // ⚠️⚠️⚠️ REMPLACEZ CE BLOC PAR LA CONFIGURATION DE VOTRE PROJET FIREBASE ⚠️⚠️⚠️
-   const firebaseConfig = {
-  apiKey: "AIzaSyAxfEpi-NERVExxVYD2EmH7JppiIQDwWOM",
-  authDomain: "ntr-garage.firebaseapp.com",
-  databaseURL: "https://ntr-garage-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ntr-garage",
-  storageBucket: "ntr-garage.firebasestorage.app",
-  messagingSenderId: "606167388967",
-  appId: "1:606167388967:web:7ad669fd353cdeeb7a8f02"
-};
+    const firebaseConfig = {
+        apiKey: "VOTRE_API_KEY",
+        authDomain: "VOTRE_PROJET.firebaseapp.com",
+        projectId: "VOTRE_PROJET_ID",
+        storageBucket: "VOTRE_PROJET.appspot.com",
+        messagingSenderId: "VOTRE_SENDER_ID",
+        appId: "VOTRE_APP_ID"
+    };
     // ⚠️⚠️⚠️ FIN DU BLOC À REMPLACER ⚠️⚠️⚠️
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     try {
         await enableIndexedDbPersistence(db);
@@ -876,6 +1057,7 @@
     }
 
     window.db = db;
+    window.auth = auth;
     window.collection = collection;
     window.addDoc = addDoc;
     window.updateDoc = updateDoc;
@@ -886,11 +1068,18 @@
     window.where = where;
     window.getDocs = getDocs;
     window.writeBatch = writeBatch;
+    window.getDoc = getDoc;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
 
     window.dispatchEvent(new Event('firebaseReady'));
 </script>
 
 <script>
+    // ============================================================
+    // VARIABLES GLOBALES
+    // ============================================================
     let serviceActif = 'HR';
     let dossiers = [];
     let tousLesDossiers = [];
@@ -898,10 +1087,11 @@
     let unsubscribeSnapshot = null;
     let deferredPrompt = null;
     let dossiersFiltresActuels = [];
-    
-    // 🆕 Gestion du tri
     let modeTriActuel = localStorage.getItem('modeTri') || 'date_desc';
-    let dossierNouvellementAjoute = null; // Pour l'animation
+    let dossierNouvellementAjoute = null;
+
+    // 🆕 Utilisateur connecté
+    let utilisateurActuel = null;  // { uid, email, nom, role }
 
     // ============================================================
     // PWA
@@ -909,7 +1099,8 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBanner').style.display = 'flex';
+        const banner = document.getElementById('installBanner');
+        if (banner) banner.style.display = 'flex';
     });
 
     function installerPWA() {
@@ -941,6 +1132,7 @@
     // ============================================================
     function updateConnectionStatus() {
         const el = document.getElementById('connectionStatus');
+        if (!el) return;
         if (navigator.onLine) {
             el.className = 'connection-status online';
             el.innerHTML = '<i class="fas fa-cloud"></i> En ligne';
@@ -953,34 +1145,194 @@
     window.addEventListener('offline', updateConnectionStatus);
 
     // ============================================================
+    // AUTHENTIFICATION
+    // ============================================================
+    async function seConnecter() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const btn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('loginError');
+
+        errorDiv.classList.remove('visible');
+
+        if (!email || !password) {
+            errorDiv.textContent = "⚠️ Veuillez remplir l'email et le mot de passe.";
+            errorDiv.classList.add('visible');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // La suite se passe dans onAuthStateChanged
+        } catch (err) {
+            console.error("Erreur connexion:", err);
+            let msg = "Erreur de connexion.";
+            if (err.code === 'auth/user-not-found') msg = "❌ Email introuvable.";
+            else if (err.code === 'auth/wrong-password') msg = "❌ Mot de passe incorrect.";
+            else if (err.code === 'auth/invalid-email') msg = "❌ Email invalide.";
+            else if (err.code === 'auth/too-many-requests') msg = "⏸️ Trop de tentatives. Réessayez plus tard.";
+            else if (err.code === 'auth/invalid-credential') msg = "❌ Email ou mot de passe incorrect.";
+            else msg = "❌ " + err.message;
+            
+            errorDiv.textContent = msg;
+            errorDiv.classList.add('visible');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+        }
+    }
+
+    // Permettre la connexion avec Entrée
+    document.addEventListener('DOMContentLoaded', () => {
+        const passwordInput = document.getElementById('loginPassword');
+        if (passwordInput) {
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') seConnecter();
+            });
+        }
+    });
+
+    async function seDeconnecter() {
+        if (!confirm("Voulez-vous vous déconnecter ?")) return;
+        try {
+            await signOut(auth);
+        } catch (err) {
+            console.error("Erreur déconnexion:", err);
+        }
+    }
+
+    // Surveillance de l'état de connexion
+    function initAuthListener() {
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Utilisateur connecté → vérifier les droits
+                console.log("🔐 Utilisateur connecté:", user.email);
+                await verifierAccesEtCharger(user);
+            } else {
+                // Déconnecté
+                console.log("🚪 Déconnecté");
+                utilisateurActuel = null;
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('appContainer').classList.remove('visible');
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginBtn').disabled = false;
+                document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+                if (unsubscribeSnapshot) {
+                    unsubscribeSnapshot();
+                    unsubscribeSnapshot = null;
+                }
+            }
+        });
+    }
+
+    async function verifierAccesEtCharger(user) {
+        try {
+            // Vérifier si l'utilisateur a accès à Suivi Expertise
+            const accessDocRef = doc(db, 'users_access', user.uid);
+            const accessSnap = await getDoc(accessDocRef);
+
+            if (!accessSnap.exists()) {
+                // Pas d'accès
+                console.warn("⛔ Aucun document d'accès trouvé");
+                await signOut(auth);
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = "⛔ Vous n'avez pas accès à cette application.\nContactez Romaric Tanoh.";
+                errorDiv.classList.add('visible');
+                return;
+            }
+
+            const data = accessSnap.data();
+
+            if (data.app !== 'suivi_expertise') {
+                // Accès à une autre app
+                console.warn("⛔ Accès refusé : app différente");
+                await signOut(auth);
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = "⛔ Vous n'avez pas accès à cette application.";
+                errorDiv.classList.add('visible');
+                return;
+            }
+
+            // ✅ Accès autorisé
+            utilisateurActuel = {
+                uid: user.uid,
+                email: user.email,
+                nom: data.nom || user.email,
+                role: data.role || 'user'
+            };
+
+            console.log("✅ Accès autorisé:", utilisateurActuel);
+
+            // Afficher l'interface
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').classList.add('visible');
+
+            // Mettre à jour le badge utilisateur
+            const userBadge = document.getElementById('userName');
+            const userRoleBadge = document.getElementById('userRole');
+            userBadge.textContent = utilisateurActuel.nom;
+            userRoleBadge.textContent = utilisateurActuel.role === 'admin' ? 'Admin' : 'Utilisateur';
+            userRoleBadge.className = 'role-badge ' + utilisateurActuel.role;
+
+            // Afficher/masquer les boutons admin
+            appliquerPermissions();
+
+            // Charger les données
+            initialiserEcouteFirebase();
+
+        } catch (err) {
+            console.error("Erreur vérification accès:", err);
+            await signOut(auth);
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = "❌ Erreur de vérification d'accès. Réessayez.";
+            errorDiv.classList.add('visible');
+        }
+    }
+
+    // ============================================================
+    // GESTION DES PERMISSIONS
+    // ============================================================
+    function appliquerPermissions() {
+        if (!utilisateurActuel) return;
+        
+        const estAdmin = utilisateurActuel.role === 'admin';
+        
+        // Bouton "Vider le service" : admin seulement
+        const btnClearAll = document.getElementById('btnClearAll');
+        if (btnClearAll) {
+            btnClearAll.style.display = estAdmin ? 'flex' : 'none';
+        }
+        
+        console.log(`🔐 Permissions : ${estAdmin ? 'ADMIN (tout)' : 'USER (créer/modifier uniquement)'}`);
+    }
+
+    function estAdmin() {
+        return utilisateurActuel && utilisateurActuel.role === 'admin';
+    }
+
+    // ============================================================
     // DÉMARRAGE
     // ============================================================
     window.addEventListener('firebaseReady', () => {
         firebasePret = true;
         console.log("🔥 Firebase prêt");
-        initialiserEcouteFirebase();
+        initAuthListener();
     });
 
     document.addEventListener('DOMContentLoaded', () => {
         updateConnectionStatus();
-        
-        // Restaurer le mode de tri
         document.getElementById('triSelect').value = modeTriActuel;
         mettreAJourTriInfo();
-        
-        setTimeout(() => {
-            if (!firebasePret) {
-                console.warn("Firebase non initialisé, mode local");
-                chargerDepuisCache();
-            }
-        }, 3000);
     });
 
     // ============================================================
     // ÉCOUTE FIRESTORE
     // ============================================================
     function initialiserEcouteFirebase() {
-        if (!firebasePret) return;
+        if (!firebasePret || !utilisateurActuel) return;
         if (unsubscribeSnapshot) unsubscribeSnapshot();
 
         const q = query(collection(db, 'dossiers'));
@@ -1023,7 +1375,7 @@
     }
 
     // ============================================================
-    // 🆕 GESTION DU TRI
+    // TRI
     // ============================================================
     function changerTri() {
         modeTriActuel = document.getElementById('triSelect').value;
@@ -1047,34 +1399,12 @@
     function trierDossiers(liste) {
         const copie = [...liste];
         switch(modeTriActuel) {
-            case 'date_desc':
-                return copie.sort((a, b) => {
-                    if (!a.date) return 1;
-                    if (!b.date) return -1;
-                    return new Date(b.date) - new Date(a.date);
-                });
-            case 'date_asc':
-                return copie.sort((a, b) => {
-                    if (!a.date) return 1;
-                    if (!b.date) return -1;
-                    return new Date(a.date) - new Date(b.date);
-                });
-            case 'created_desc':
-                return copie.sort((a, b) => {
-                    const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
-                    const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
-                    return dateB - dateA;
-                });
-            case 'assure_asc':
-                return copie.sort((a, b) => {
-                    const nomA = (a.assure || '').toLowerCase();
-                    const nomB = (b.assure || '').toLowerCase();
-                    return nomA.localeCompare(nomB);
-                });
-            case 'montant_desc':
-                return copie.sort((a, b) => (b.montantRapport || 0) - (a.montantRapport || 0));
-            default:
-                return copie;
+            case 'date_desc': return copie.sort((a, b) => (!a.date ? 1 : !b.date ? -1 : new Date(b.date) - new Date(a.date)));
+            case 'date_asc': return copie.sort((a, b) => (!a.date ? 1 : !b.date ? -1 : new Date(a.date) - new Date(b.date)));
+            case 'created_desc': return copie.sort((a, b) => (new Date(b.createdAt || 0)) - (new Date(a.createdAt || 0)));
+            case 'assure_asc': return copie.sort((a, b) => (a.assure || '').toLowerCase().localeCompare((b.assure || '').toLowerCase()));
+            case 'montant_desc': return copie.sort((a, b) => (b.montantRapport || 0) - (a.montantRapport || 0));
+            default: return copie;
         }
     }
 
@@ -1115,20 +1445,20 @@
             montantDevis: parseFloat(document.getElementById('montantDevis').value) || 0,
             commentaire: document.getElementById('commentaire').value,
             statut: document.getElementById('statut').value,
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
+            modifiePar: utilisateurActuel ? utilisateurActuel.email : 'inconnu'
         };
 
         try {
             if (!editId) {
-                // Ajout
                 dossierData.createdAt = new Date().toISOString();
+                dossierData.creePar = utilisateurActuel ? utilisateurActuel.email : 'inconnu';
                 const docRef = await addDoc(collection(db, 'dossiers'), dossierData);
-                // 🆕 Marquer pour animation
                 dossierNouvellementAjoute = docRef.id;
-                console.log("✅ Dossier ajouté avec animation");
+                console.log("✅ Dossier ajouté par", utilisateurActuel.email);
             } else {
-                // Modification
                 await updateDoc(doc(db, 'dossiers', editId), dossierData);
+                console.log("✅ Dossier modifié par", utilisateurActuel.email);
             }
             closeModal();
         } catch (err) {
@@ -1166,9 +1496,14 @@
     }
 
     async function deleteDossier(firebaseId) {
+        if (!estAdmin()) {
+            alert("⛔ Seul un administrateur peut supprimer un dossier.");
+            return;
+        }
         if (!confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) return;
         try {
             await deleteDoc(doc(db, 'dossiers', firebaseId));
+            console.log("🗑️ Dossier supprimé par", utilisateurActuel.email);
         } catch (err) {
             console.error("Erreur suppression:", err);
             alert("Erreur lors de la suppression.");
@@ -1196,7 +1531,6 @@
             return matchesSearch && matchesStatut;
         });
 
-        // 🆕 Appliquer le tri
         filteredDossiers = trierDossiers(filteredDossiers);
 
         filteredDossiers.forEach((d, index) => {
@@ -1216,18 +1550,19 @@
 
             tr.className = alerteClass;
             
-            // 🆕 Animation pour nouveau dossier
             if (dossierNouvellementAjoute && d.firebaseId === dossierNouvellementAjoute) {
                 tr.classList.add('nouveau-dossier');
-                // Retirer le marqueur après l'animation
-                setTimeout(() => {
-                    dossierNouvellementAjoute = null;
-                }, 3000);
+                setTimeout(() => { dossierNouvellementAjoute = null; }, 3000);
             }
 
             let statusClass = 'status-attente';
             if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
+
+            // Bouton suppression : visible seulement pour admin
+            const deleteBtn = estAdmin() 
+                ? `<button class="btn-danger btn-sm" onclick="deleteDossier('${d.firebaseId}')"><i class="fas fa-trash"></i></button>` 
+                : '';
 
             tr.innerHTML = `
                 <td>${index + 1}</td>
@@ -1250,7 +1585,7 @@
                 <td><span class="status-badge ${statusClass}">${d.statut}</span></td>
                 <td class="actions-cell">
                     <button class="btn-primary btn-sm" onclick="editDossier('${d.firebaseId}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger btn-sm" onclick="deleteDossier('${d.firebaseId}')"><i class="fas fa-trash"></i></button>
+                    ${deleteBtn}
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1272,17 +1607,15 @@
     }
 
     // ============================================================
-    // ANALYSE PAR STATUT
+    // ANALYSE
     // ============================================================
     function analyseRapide(statut) {
         document.getElementById('filtreStatutAnalyse').value = statut;
         document.getElementById('filtreExpert').value = '';
         document.getElementById('dateDebut').value = '';
         document.getElementById('dateFin').value = '';
-        
         document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
         event.currentTarget.classList.add('active');
-        
         calculerAnalyse();
     }
 
@@ -1293,7 +1626,6 @@
         const dateFin = document.getElementById('dateFin').value;
 
         let dossiersFiltres = [...dossiers];
-
         if (statutFiltre) dossiersFiltres = dossiersFiltres.filter(d => d.statut === statutFiltre);
         if (expertFiltre) dossiersFiltres = dossiersFiltres.filter(d => d.cabinet === expertFiltre);
 
@@ -1307,12 +1639,7 @@
             dossiersFiltres = dossiersFiltres.filter(d => d.date && new Date(d.date) <= fin);
         }
 
-        // Trier par date décroissante pour l'affichage des filtres
-        dossiersFiltres.sort((a, b) => {
-            if (!a.date) return 1;
-            if (!b.date) return -1;
-            return new Date(b.date) - new Date(a.date);
-        });
+        dossiersFiltres.sort((a, b) => (!a.date ? 1 : !b.date ? -1 : new Date(b.date) - new Date(a.date)));
 
         dossiersFiltresActuels = dossiersFiltres;
 
@@ -1333,27 +1660,20 @@
     function afficherTableauFiltre(dossiersAffiches) {
         const tbody = document.getElementById('filteredTableBody');
         tbody.innerHTML = '';
-
         document.getElementById('filteredCount').textContent = dossiersAffiches.length;
 
         if (dossiersAffiches.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" class="no-results">Aucun dossier ne correspond aux critères sélectionnés.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="no-results">Aucun dossier ne correspond aux critères.</td></tr>';
             document.getElementById('filteredResultsSection').style.display = 'block';
             return;
         }
 
         dossiersAffiches.forEach((d, index) => {
             const tr = document.createElement('tr');
-            
             let statusClass = 'status-attente';
             if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
-
-            let dateAffichee = '-';
-            if (d.date) {
-                const dateObj = new Date(d.date);
-                dateAffichee = dateObj.toLocaleDateString('fr-FR');
-            }
+            const dateAffichee = d.date ? new Date(d.date).toLocaleDateString('fr-FR') : '-';
 
             tr.innerHTML = `
                 <td>${index + 1}</td>
@@ -1378,153 +1698,44 @@
     }
 
     function exportFilteredCSV() {
-        if (dossiersFiltresActuels.length === 0) {
-            alert('Aucun dossier à exporter.');
-            return;
-        }
-
+        if (dossiersFiltresActuels.length === 0) { alert('Aucun dossier à exporter.'); return; }
         const headers = ['NB', 'Date', 'Assuré', 'Immatriculation', 'Sinistre', 'Expert', 'Montant Rapport', 'Montant Validé', 'Montant Devis', 'Statut'];
         let csvContent = headers.join(';') + '\n';
-
         dossiersFiltresActuels.forEach((d, index) => {
-            const row = [
-                index + 1,
-                `"${d.date || ''}"`,
-                `"${(d.assure || '').replace(/"/g, '""')}"`,
-                `"${d.immat || ''}"`,
-                `"${d.sinistre || ''}"`,
-                `"${d.cabinet || ''}"`,
-                d.montantRapport || 0,
-                d.montantValide || 0,
-                d.montantDevis || 0,
-                `"${d.statut || ''}"`
-            ];
+            const row = [index + 1, `"${d.date || ''}"`, `"${(d.assure || '').replace(/"/g, '""')}"`, `"${d.immat || ''}"`, `"${d.sinistre || ''}"`, `"${d.cabinet || ''}"`, d.montantRapport || 0, d.montantValide || 0, d.montantDevis || 0, `"${d.statut || ''}"`];
             csvContent += row.join(';') + '\n';
         });
-
         csvContent += '\n';
         csvContent += `TOTAUX;;;;;;${dossiersFiltresActuels.reduce((a, d) => a + (d.montantRapport || 0), 0)};${dossiersFiltresActuels.reduce((a, d) => a + (d.montantValide || 0), 0)};${dossiersFiltresActuels.reduce((a, d) => a + (d.montantDevis || 0), 0)};\n`;
-
         const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        const nomFiltre = [
-            document.getElementById('filtreStatutAnalyse').value || 'TousStatuts',
-            document.getElementById('filtreExpert').value || 'TousExperts'
-        ].join('_');
+        const nomFiltre = [document.getElementById('filtreStatutAnalyse').value || 'Tous', document.getElementById('filtreExpert').value || 'TousExperts'].join('_');
         link.download = `filtre_${serviceActif}_${nomFiltre}_${new Date().toISOString().slice(0,10)}.csv`;
         link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
     function imprimerFiltres() {
-        if (dossiersFiltresActuels.length === 0) {
-            alert('Aucun dossier à imprimer.');
-            return;
-        }
-
+        if (dossiersFiltresActuels.length === 0) { alert('Aucun dossier à imprimer.'); return; }
         const fenetre = window.open('', '_blank');
-        
         const statut = document.getElementById('filtreStatutAnalyse').value || 'Tous les statuts';
         const expert = document.getElementById('filtreExpert').value || 'Tous les experts';
-        const dateD = document.getElementById('dateDebut').value || '-';
-        const dateF = document.getElementById('dateFin').value || '-';
-        
         const totalRapport = dossiersFiltresActuels.reduce((a, d) => a + (d.montantRapport || 0), 0);
         const totalValide = dossiersFiltresActuels.reduce((a, d) => a + (d.montantValide || 0), 0);
         const totalDevis = dossiersFiltresActuels.reduce((a, d) => a + (d.montantDevis || 0), 0);
-
-        let html = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Impression - ${serviceActif}</title>
-                <style>
-                    body { font-family: Arial, sans-serif; font-size: 11px; padding: 15px; }
-                    h1 { color: #2c3e50; font-size: 18px; }
-                    h2 { color: #34495e; font-size: 14px; margin-top: 20px; }
-                    .infos { margin: 10px 0; color: #555; }
-                    .infos span { display: inline-block; margin-right: 20px; }
-                    .totaux { background: #ecf0f1; padding: 10px; border-left: 4px solid #2c3e50; margin: 15px 0; display: flex; gap: 30px; flex-wrap: wrap; }
-                    .totaux div { font-weight: bold; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                    th, td { border: 1px solid #999; padding: 4px 6px; text-align: left; }
-                    th { background: #2c3e50; color: white; font-size: 10px; }
-                    tr:nth-child(even) { background: #f9f9f9; }
-                    .total-row { background: #ecf0f1 !important; font-weight: bold; }
-                    @media print { body { padding: 0; } @page { margin: 10mm; } }
-                </style>
-            </head>
-            <body>
-                <h1>📋 Suivi des Rapports d'Expertise - Service ${serviceActif}</h1>
-                <h2>Résultats filtrés</h2>
-                <div class="infos">
-                    <span><strong>Statut :</strong> ${statut}</span>
-                    <span><strong>Expert :</strong> ${expert}</span>
-                    <span><strong>Du :</strong> ${dateD}</span>
-                    <span><strong>Au :</strong> ${dateF}</span>
-                </div>
-                <div class="totaux">
-                    <div>Dossiers : ${dossiersFiltresActuels.length}</div>
-                    <div>Total Rapports : ${formatMoney(totalRapport)}</div>
-                    <div>Total Validés : ${formatMoney(totalValide)}</div>
-                    <div>Total Devis : ${formatMoney(totalDevis)}</div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>NB</th><th>Date</th><th>Assuré</th><th>Immatriculation</th>
-                            <th>Sinistre</th><th>Expert</th><th>Montant Rapport</th>
-                            <th>Montant Validé</th><th>Montant Devis</th><th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-
-        dossiersFiltresActuels.forEach((d, index) => {
-            const dateObj = d.date ? new Date(d.date) : null;
-            const dateAffichee = dateObj ? dateObj.toLocaleDateString('fr-FR') : '-';
-            html += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${dateAffichee}</td>
-                    <td>${d.assure || '-'}</td>
-                    <td>${d.immat || '-'}</td>
-                    <td>${d.sinistre || '-'}</td>
-                    <td>${d.cabinet || '-'}</td>
-                    <td>${formatMoney(d.montantRapport)}</td>
-                    <td>${formatMoney(d.montantValide)}</td>
-                    <td>${formatMoney(d.montantDevis)}</td>
-                    <td>${d.statut || '-'}</td>
-                </tr>
-            `;
+        
+        let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Impression</title><style>body{font-family:Arial;font-size:11px;padding:15px}h1{color:#2c3e50}h2{color:#34495e;font-size:14px}.totaux{background:#ecf0f1;padding:10px;border-left:4px solid #2c3e50;margin:15px 0;display:flex;gap:30px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #999;padding:4px 6px;text-align:left}th{background:#2c3e50;color:white;font-size:10px}tr:nth-child(even){background:#f9f9f9}.total-row{background:#ecf0f1!important;font-weight:bold}</style></head><body>`;
+        html += `<h1>📋 Suivi des Rapports - Service ${serviceActif}</h1><h2>Résultats filtrés</h2>`;
+        html += `<div><strong>Statut :</strong> ${statut} | <strong>Expert :</strong> ${expert}</div>`;
+        html += `<div class="totaux"><div>Dossiers : ${dossiersFiltresActuels.length}</div><div>Rapports : ${formatMoney(totalRapport)}</div><div>Validés : ${formatMoney(totalValide)}</div><div>Devis : ${formatMoney(totalDevis)}</div></div>`;
+        html += `<table><thead><tr><th>NB</th><th>Date</th><th>Assuré</th><th>Immat</th><th>Sinistre</th><th>Expert</th><th>Rapport</th><th>Validé</th><th>Devis</th><th>Statut</th></tr></thead><tbody>`;
+        dossiersFiltresActuels.forEach((d, i) => {
+            const dt = d.date ? new Date(d.date).toLocaleDateString('fr-FR') : '-';
+            html += `<tr><td>${i+1}</td><td>${dt}</td><td>${d.assure||'-'}</td><td>${d.immat||'-'}</td><td>${d.sinistre||'-'}</td><td>${d.cabinet||'-'}</td><td>${formatMoney(d.montantRapport)}</td><td>${formatMoney(d.montantValide)}</td><td>${formatMoney(d.montantDevis)}</td><td>${d.statut}</td></tr>`;
         });
-
-        html += `
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="6">TOTAUX</td>
-                            <td>${formatMoney(totalRapport)}</td>
-                            <td>${formatMoney(totalValide)}</td>
-                            <td>${formatMoney(totalDevis)}</td>
-                            <td>-</td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <p style="margin-top: 20px; font-size: 10px; color: #777;">
-                    Document généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}
-                </p>
-                <script>
-                    window.onload = function() { window.print(); }
-                <\/script>
-            </body>
-            </html>
-        `;
-
+        html += `</tbody><tfoot><tr class="total-row"><td colspan="6">TOTAUX</td><td>${formatMoney(totalRapport)}</td><td>${formatMoney(totalValide)}</td><td>${formatMoney(totalDevis)}</td><td>-</td></tr></tfoot></table>`;
+        html += `<script>window.onload=()=>window.print();<\/script></body></html>`;
         fenetre.document.write(html);
         fenetre.document.close();
     }
@@ -1553,6 +1764,10 @@
     }
 
     async function clearAll() {
+        if (!estAdmin()) {
+            alert("⛔ Seul un administrateur peut vider un service.");
+            return;
+        }
         if (!confirm(`⚠️ ATTENTION ! Cela supprimera TOUS les dossiers du service ${serviceActif}.\n\nCette action est IRRÉVERSIBLE.`)) return;
         if (!confirm(`Dernière confirmation : supprimer tous les dossiers ${serviceActif} ?`)) return;
 
@@ -1561,6 +1776,7 @@
             const batch = writeBatch(db);
             aSupprimer.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
             await batch.commit();
+            console.log(`🗑️ ${aSupprimer.length} dossiers supprimés par ${utilisateurActuel.email}`);
         } catch (err) {
             console.error("Erreur:", err);
             alert("Erreur lors de la suppression.");
@@ -1579,9 +1795,7 @@
         let csvContent = headers.join(';') + '\n';
         dossiers.forEach((d) => {
             const row = [
-                `"${d.firebaseId || ''}"`,
-                `"${d.service || ''}"`,
-                `"${d.assure || ''}"`, `"${d.vehicule || ''}"`, `"${d.type || ''}"`, `"${d.immat || ''}"`, `"${d.sinistre || ''}"`, `"${d.assureur || ''}"`, `"${d.photoAvt || ''}"`, `"${d.photoAp || ''}"`, `"${d.date || ''}"`, `"${d.livraison || ''}"`, `"${d.cabinet || ''}"`, d.montantRapport || 0, `"${d.rapportValide || 'Non'}"`, d.montantValide || 0, d.montantDevis || 0, `"${(d.commentaire || '').replace(/"/g, '""')}"`, `"${d.statut || ''}"`
+                `"${d.firebaseId || ''}"`, `"${d.service || ''}"`, `"${d.assure || ''}"`, `"${d.vehicule || ''}"`, `"${d.type || ''}"`, `"${d.immat || ''}"`, `"${d.sinistre || ''}"`, `"${d.assureur || ''}"`, `"${d.photoAvt || ''}"`, `"${d.photoAp || ''}"`, `"${d.date || ''}"`, `"${d.livraison || ''}"`, `"${d.cabinet || ''}"`, d.montantRapport || 0, `"${d.rapportValide || 'Non'}"`, d.montantValide || 0, d.montantDevis || 0, `"${(d.commentaire || '').replace(/"/g, '""')}"`, `"${d.statut || ''}"`
             ];
             csvContent += row.join(';') + '\n';
         });
@@ -1594,7 +1808,7 @@
     }
 
     // ============================================================
-    // IMPORT CSV INTELLIGENT
+    // IMPORT CSV
     // ============================================================
     async function importCSV(event) {
         const file = event.target.files[0];
@@ -1603,63 +1817,43 @@
         const reader = new FileReader();
         reader.onload = async function(e) {
             let contenu = e.target.result;
-            
             const premiereLigne = contenu.split('\n')[0];
-            const nbPointsVirgules = (premiereLigne.match(/;/g) || []).length;
-            const nbVirgules = (premiereLigne.match(/,/g) || []).length;
-            const separateur = nbPointsVirgules >= nbVirgules ? ';' : ',';
-            console.log(`📊 Séparateur détecté : "${separateur}"`);
+            const separateur = (premiereLigne.match(/;/g) || []).length >= (premiereLigne.match(/,/g) || []).length ? ';' : ',';
             
             const lines = contenu.split('\n');
             const dossiersImportes = [];
-            
             const entete = lines[0].split(separateur).map(c => c.trim().replace(/^"|"$/g, '').toLowerCase());
             
-            const aColonneID = entete[0] === 'id';
-            const aColonneService = entete[1] === 'service';
-            const aColonneNB = entete[0] === 'nb';
-            
             let offset = 0;
-            if (aColonneID) offset++;
-            if (aColonneService) offset++;
-            if (aColonneNB) offset++;
+            if (entete[0] === 'id') offset++;
+            if (entete[1] === 'service') offset++;
+            if (entete[0] === 'nb') offset++;
             
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                
                 const cols = line.split(separateur);
                 if (cols.length < 17 + offset) continue;
                 
                 let serviceDossier = serviceActif;
-                if (aColonneService && cols[1]) {
-                    const serviceLu = cols[1].replace(/^"|"$/g, '').toUpperCase();
-                    if (serviceLu === 'HR' || serviceLu === 'UM' || serviceLu === 'UNICARS') {
-                        serviceDossier = serviceLu;
-                    }
+                if (cols[1] && ['HR','UM','UNICARS'].includes(cols[1].replace(/^"|"$/g, '').toUpperCase())) {
+                    serviceDossier = cols[1].replace(/^"|"$/g, '').toUpperCase();
                 }
                 
-                const nettoyer = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+                const n = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
                 
                 dossiersImportes.push({
                     service: serviceDossier,
-                    assure: nettoyer(cols[offset + 0]),
-                    vehicule: nettoyer(cols[offset + 1]),
-                    type: nettoyer(cols[offset + 2]),
-                    immat: nettoyer(cols[offset + 3]),
-                    sinistre: nettoyer(cols[offset + 4]),
-                    assureur: nettoyer(cols[offset + 5]),
-                    photoAvt: nettoyer(cols[offset + 6]),
-                    photoAp: nettoyer(cols[offset + 7]),
-                    date: nettoyer(cols[offset + 8]),
-                    livraison: nettoyer(cols[offset + 9]),
-                    cabinet: nettoyer(cols[offset + 10]),
+                    assure: n(cols[offset + 0]), vehicule: n(cols[offset + 1]), type: n(cols[offset + 2]),
+                    immat: n(cols[offset + 3]), sinistre: n(cols[offset + 4]), assureur: n(cols[offset + 5]),
+                    photoAvt: n(cols[offset + 6]), photoAp: n(cols[offset + 7]), date: n(cols[offset + 8]),
+                    livraison: n(cols[offset + 9]), cabinet: n(cols[offset + 10]),
                     montantRapport: parseFloat(cols[offset + 11]) || 0,
-                    rapportValide: nettoyer(cols[offset + 12]) || 'Non',
+                    rapportValide: n(cols[offset + 12]) || 'Non',
                     montantValide: parseFloat(cols[offset + 13]) || 0,
                     montantDevis: parseFloat(cols[offset + 14]) || 0,
-                    commentaire: nettoyer(cols[offset + 15]),
-                    statut: nettoyer(cols[offset + 16]) || 'EN ATTENTE DE RAPPORT'
+                    commentaire: n(cols[offset + 15]),
+                    statut: n(cols[offset + 16]) || 'EN ATTENTE DE RAPPORT'
                 });
             }
             
@@ -1669,77 +1863,61 @@
                 return;
             }
             
-            const choix = prompt(
-                `📁 ${dossiersImportes.length} dossiers trouvés.\n\n` +
-                `1 = FUSIONNER (éviter les doublons)\n` +
-                `2 = REMPLACER (effacer le service "${serviceActif}")\n` +
-                `3 = AJOUTER TOUT\n` +
-                `4 = ANNULER`
-            );
+            const choix = prompt(`📁 ${dossiersImportes.length} dossiers trouvés.\n\n1 = FUSIONNER\n2 = REMPLACER\n3 = AJOUTER TOUT\n4 = ANNULER`);
             
             try {
                 if (choix === '1') {
-                    const empreintesExistantes = new Set(
-                        tousLesDossiers.map(d => 
-                            `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`
-                        )
-                    );
-                    const nouveaux = dossiersImportes.filter(d => {
-                        const empreinte = `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`;
-                        return !empreintesExistantes.has(empreinte);
-                    });
+                    const existantes = new Set(tousLesDossiers.map(d => `${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`));
+                    const nouveaux = dossiersImportes.filter(d => !existantes.has(`${(d.immat || '').toUpperCase()}|${d.sinistre || ''}|${d.date || ''}|${d.montantRapport || 0}`));
                     
-                    if (nouveaux.length === 0) {
-                        alert(`ℹ️ Tous les dossiers sont déjà présents.`);
-                        event.target.value = '';
-                        return;
-                    }
+                    if (nouveaux.length === 0) { alert(`ℹ️ Tous les dossiers sont déjà présents.`); event.target.value = ''; return; }
                     
                     const batch = writeBatch(db);
                     nouveaux.forEach(d => {
-                        const newRef = doc(collection(db, 'dossiers'));
+                        const ref = doc(collection(db, 'dossiers'));
                         d.createdAt = new Date().toISOString();
                         d.updatedAt = d.createdAt;
-                        batch.set(newRef, d);
+                        d.creePar = utilisateurActuel.email;
+                        d.modifiePar = utilisateurActuel.email;
+                        batch.set(ref, d);
                     });
                     await batch.commit();
-                    
                     alert(`✅ Fusion réussie !\n- ${nouveaux.length} ajoutés\n- ${dossiersImportes.length - nouveaux.length} doublons ignorés`);
                     
                 } else if (choix === '2') {
-                    if (!confirm(`⚠️ REMPLACER toutes les données du service ${serviceActif} ?`)) {
-                        event.target.value = '';
-                        return;
-                    }
+                    if (!estAdmin()) { alert("⛔ Seul un admin peut remplacer."); event.target.value = ''; return; }
+                    if (!confirm(`⚠️ Remplacer toutes les données du service ${serviceActif} ?`)) { event.target.value = ''; return; }
                     const batch = writeBatch(db);
                     dossiers.forEach(d => batch.delete(doc(db, 'dossiers', d.firebaseId)));
                     dossiersImportes.forEach(d => {
-                        const newRef = doc(collection(db, 'dossiers'));
+                        const ref = doc(collection(db, 'dossiers'));
                         d.service = serviceActif;
                         d.createdAt = new Date().toISOString();
                         d.updatedAt = d.createdAt;
-                        batch.set(newRef, d);
+                        d.creePar = utilisateurActuel.email;
+                        d.modifiePar = utilisateurActuel.email;
+                        batch.set(ref, d);
                     });
                     await batch.commit();
-                    alert(`✅ Remplacement réussi ! ${dossiersImportes.length} dossiers chargés.`);
+                    alert(`✅ Remplacement réussi !`);
                     
                 } else if (choix === '3') {
                     const batch = writeBatch(db);
                     dossiersImportes.forEach(d => {
-                        const newRef = doc(collection(db, 'dossiers'));
+                        const ref = doc(collection(db, 'dossiers'));
                         d.createdAt = new Date().toISOString();
                         d.updatedAt = d.createdAt;
-                        batch.set(newRef, d);
+                        d.creePar = utilisateurActuel.email;
+                        d.modifiePar = utilisateurActuel.email;
+                        batch.set(ref, d);
                     });
                     await batch.commit();
                     alert(`✅ Ajout réussi ! ${dossiersImportes.length} dossiers ajoutés.`);
                 }
-                
             } catch (err) {
                 console.error("Erreur import:", err);
                 alert("❌ Erreur :\n" + err.message);
             }
-            
             event.target.value = '';
         };
         reader.readAsText(file, 'UTF-8');
