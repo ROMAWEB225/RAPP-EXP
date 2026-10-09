@@ -36,9 +36,7 @@
             padding: 15px;
         }
 
-        /* ============================================================ */
         /* ÉCRAN DE CONNEXION */
-        /* ============================================================ */
         #loginScreen {
             position: fixed;
             top: 0; left: 0;
@@ -61,23 +59,9 @@
             text-align: center;
         }
 
-        .login-box .logo {
-            font-size: 48px;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .login-box h1 {
-            color: var(--primary-color);
-            font-size: 22px;
-            margin: 0 0 5px 0;
-        }
-
-        .login-box .subtitle {
-            color: #7f8c8d;
-            font-size: 13px;
-            margin-bottom: 30px;
-        }
+        .login-box .logo { font-size: 48px; color: var(--primary-color); margin-bottom: 10px; }
+        .login-box h1 { color: var(--primary-color); font-size: 22px; margin: 0 0 5px 0; }
+        .login-box .subtitle { color: #7f8c8d; font-size: 13px; margin-bottom: 30px; }
 
         .login-box input {
             width: 100%;
@@ -90,10 +74,7 @@
             font-family: inherit;
         }
 
-        .login-box input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
+        .login-box input:focus { outline: none; border-color: var(--primary-color); }
 
         .login-box button {
             width: 100%;
@@ -123,6 +104,7 @@
             background: #fadbd8;
             border-radius: 5px;
             display: none;
+            white-space: pre-line;
         }
 
         .login-error.visible { display: block; }
@@ -134,9 +116,7 @@
             line-height: 1.5;
         }
 
-        /* ============================================================ */
         /* APPLICATION PRINCIPALE */
-        /* ============================================================ */
         #appContainer { display: none; }
         #appContainer.visible { display: block; }
 
@@ -274,11 +254,7 @@
             color: #95a5a6;
         }
 
-        .ad-banner a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .ad-banner a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
 
         .dashboard {
             display: grid;
@@ -409,11 +385,7 @@
             font-weight: bold;
         }
 
-        .filtered-results-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .filtered-results-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
         .btn-export-filtered {
             background: var(--success-color);
@@ -472,11 +444,7 @@
             font-size: 11px;
         }
 
-        .filtered-table-container td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
-
+        .filtered-table-container td { padding: 8px; border-bottom: 1px solid #eee; }
         .filtered-table-container tr:hover { background: #f8f9fa; }
 
         .no-results {
@@ -507,12 +475,7 @@
             gap: 6px;
         }
 
-        .legende-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #555;
-        }
+        .legende-item { display: flex; align-items: center; gap: 6px; color: #555; }
 
         .legende-pastille {
             width: 16px;
@@ -619,9 +582,7 @@
             0% { background-color: #d5f4e6; transform: scale(1.01); }
             100% { background-color: transparent; transform: scale(1); }
         }
-        tr.nouveau-dossier {
-            animation: nouveauDossier 3s ease-out;
-        }
+        tr.nouveau-dossier { animation: nouveauDossier 3s ease-out; }
 
         .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .status-attente { background-color: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
@@ -686,9 +647,7 @@
 </head>
 <body>
 
-<!-- ============================================================ -->
 <!-- ÉCRAN DE CONNEXION -->
-<!-- ============================================================ -->
 <div id="loginScreen">
     <div class="login-box">
         <div class="logo"><i class="fas fa-shield-alt"></i></div>
@@ -711,9 +670,7 @@
     </div>
 </div>
 
-<!-- ============================================================ -->
 <!-- APPLICATION PRINCIPALE -->
-<!-- ============================================================ -->
 <div id="appContainer">
 <div class="container">
     <div class="header-top">
@@ -1017,9 +974,7 @@
     </div>
 </div>
 
-<!-- ============================================================== -->
 <!-- FIREBASE -->
-<!-- ============================================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
@@ -1031,7 +986,7 @@
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     // ⚠️⚠️⚠️ REMPLACEZ CE BLOC PAR LA CONFIGURATION DE VOTRE PROJET FIREBASE ⚠️⚠️⚠️
- const firebaseConfig = {
+    const firebaseConfig = {
   apiKey: "AIzaSyAxfEpi-NERVExxVYD2EmH7JppiIQDwWOM",
   authDomain: "ntr-garage.firebaseapp.com",
   databaseURL: "https://ntr-garage-default-rtdb.europe-west1.firebasedatabase.app",
@@ -1078,9 +1033,6 @@
 </script>
 
 <script>
-    // ============================================================
-    // VARIABLES GLOBALES
-    // ============================================================
     let serviceActif = 'HR';
     let dossiers = [];
     let tousLesDossiers = [];
@@ -1091,12 +1043,9 @@
     let modeTriActuel = localStorage.getItem('modeTri') || 'date_desc';
     let dossierNouvellementAjoute = null;
 
-    // 🆕 Utilisateur connecté
-    let utilisateurActuel = null;  // { uid, email, nom, role }
+    let utilisateurActuel = null;
 
-    // ============================================================
     // PWA
-    // ============================================================
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -1128,9 +1077,7 @@
         navigator.serviceWorker.register(swUrl).catch(err => console.log('SW non enregistré:', err));
     }
 
-    // ============================================================
     // CONNEXION
-    // ============================================================
     function updateConnectionStatus() {
         const el = document.getElementById('connectionStatus');
         if (!el) return;
@@ -1145,9 +1092,7 @@
     window.addEventListener('online', updateConnectionStatus);
     window.addEventListener('offline', updateConnectionStatus);
 
-    // ============================================================
     // AUTHENTIFICATION
-    // ============================================================
     async function seConnecter() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
@@ -1167,7 +1112,6 @@
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            // La suite se passe dans onAuthStateChanged
         } catch (err) {
             console.error("Erreur connexion:", err);
             let msg = "Erreur de connexion.";
@@ -1185,7 +1129,6 @@
         }
     }
 
-    // Permettre la connexion avec Entrée
     document.addEventListener('DOMContentLoaded', () => {
         const passwordInput = document.getElementById('loginPassword');
         if (passwordInput) {
@@ -1204,15 +1147,12 @@
         }
     }
 
-    // Surveillance de l'état de connexion
     function initAuthListener() {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Utilisateur connecté → vérifier les droits
                 console.log("🔐 Utilisateur connecté:", user.email);
                 await verifierAccesEtCharger(user);
             } else {
-                // Déconnecté
                 console.log("🚪 Déconnecté");
                 utilisateurActuel = null;
                 document.getElementById('loginScreen').style.display = 'flex';
@@ -1231,12 +1171,10 @@
 
     async function verifierAccesEtCharger(user) {
         try {
-            // Vérifier si l'utilisateur a accès à Suivi Expertise
             const accessDocRef = doc(db, 'users_access', user.uid);
             const accessSnap = await getDoc(accessDocRef);
 
             if (!accessSnap.exists()) {
-                // Pas d'accès
                 console.warn("⛔ Aucun document d'accès trouvé");
                 await signOut(auth);
                 const errorDiv = document.getElementById('loginError');
@@ -1248,7 +1186,6 @@
             const data = accessSnap.data();
 
             if (data.app !== 'suivi_expertise') {
-                // Accès à une autre app
                 console.warn("⛔ Accès refusé : app différente");
                 await signOut(auth);
                 const errorDiv = document.getElementById('loginError');
@@ -1257,7 +1194,6 @@
                 return;
             }
 
-            // ✅ Accès autorisé
             utilisateurActuel = {
                 uid: user.uid,
                 email: user.email,
@@ -1267,21 +1203,16 @@
 
             console.log("✅ Accès autorisé:", utilisateurActuel);
 
-            // Afficher l'interface
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('appContainer').classList.add('visible');
 
-            // Mettre à jour le badge utilisateur
             const userBadge = document.getElementById('userName');
             const userRoleBadge = document.getElementById('userRole');
             userBadge.textContent = utilisateurActuel.nom;
             userRoleBadge.textContent = utilisateurActuel.role === 'admin' ? 'Admin' : 'Utilisateur';
             userRoleBadge.className = 'role-badge ' + utilisateurActuel.role;
 
-            // Afficher/masquer les boutons admin
             appliquerPermissions();
-
-            // Charger les données
             initialiserEcouteFirebase();
 
         } catch (err) {
@@ -1293,30 +1224,25 @@
         }
     }
 
-    // ============================================================
-    // GESTION DES PERMISSIONS
-    // ============================================================
+    // PERMISSIONS
     function appliquerPermissions() {
         if (!utilisateurActuel) return;
         
-        const estAdmin = utilisateurActuel.role === 'admin';
+        const estAdminUser = utilisateurActuel.role === 'admin';
         
-        // Bouton "Vider le service" : admin seulement
         const btnClearAll = document.getElementById('btnClearAll');
         if (btnClearAll) {
-            btnClearAll.style.display = estAdmin ? 'flex' : 'none';
+            btnClearAll.style.display = estAdminUser ? 'flex' : 'none';
         }
         
-        console.log(`🔐 Permissions : ${estAdmin ? 'ADMIN (tout)' : 'USER (créer/modifier uniquement)'}`);
+        console.log(`🔐 Permissions : ${estAdminUser ? 'ADMIN (tout)' : 'USER (créer/modifier uniquement)'}`);
     }
 
     function estAdmin() {
         return utilisateurActuel && utilisateurActuel.role === 'admin';
     }
 
-    // ============================================================
     // DÉMARRAGE
-    // ============================================================
     window.addEventListener('firebaseReady', () => {
         firebasePret = true;
         console.log("🔥 Firebase prêt");
@@ -1329,9 +1255,7 @@
         mettreAJourTriInfo();
     });
 
-    // ============================================================
     // ÉCOUTE FIRESTORE
-    // ============================================================
     function initialiserEcouteFirebase() {
         if (!firebasePret || !utilisateurActuel) return;
         if (unsubscribeSnapshot) unsubscribeSnapshot();
@@ -1361,9 +1285,7 @@
         updateDashboard();
     }
 
-    // ============================================================
     // CHANGEMENT DE SERVICE
-    // ============================================================
     function changerService(service) {
         serviceActif = service;
         document.getElementById('btnHR').className = 'service-btn' + (service === 'HR' ? ' active-hr' : '');
@@ -1375,9 +1297,7 @@
         resetAnalyse();
     }
 
-    // ============================================================
     // TRI
-    // ============================================================
     function changerTri() {
         modeTriActuel = document.getElementById('triSelect').value;
         localStorage.setItem('modeTri', modeTriActuel);
@@ -1409,9 +1329,7 @@
         }
     }
 
-    // ============================================================
     // CRUD
-    // ============================================================
     function openModal() {
         document.getElementById('modalTitle').textContent = `Ajouter un dossier (${serviceActif})`;
         document.getElementById('dossierForm').reset();
@@ -1511,9 +1429,7 @@
         }
     }
 
-    // ============================================================
     // AFFICHAGE
-    // ============================================================
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -1560,7 +1476,6 @@
             if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
 
-            // Bouton suppression : visible seulement pour admin
             const deleteBtn = estAdmin() 
                 ? `<button class="btn-danger btn-sm" onclick="deleteDossier('${d.firebaseId}')"><i class="fas fa-trash"></i></button>` 
                 : '';
@@ -1607,9 +1522,7 @@
         document.getElementById('montantDevisTotal').textContent = formatMoney(montantDevisTotal);
     }
 
-    // ============================================================
     // ANALYSE
-    // ============================================================
     function analyseRapide(statut) {
         document.getElementById('filtreStatutAnalyse').value = statut;
         document.getElementById('filtreExpert').value = '';
@@ -1751,9 +1664,7 @@
         document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
     }
 
-    // ============================================================
     // UTILITAIRES
-    // ============================================================
     function formatMoney(amount) {
         return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(amount).replace('XOF', 'FCFA');
     }
@@ -1787,9 +1698,7 @@
     document.getElementById('searchInput').addEventListener('input', renderTable);
     document.getElementById('filterStatut').addEventListener('change', renderTable);
 
-    // ============================================================
     // EXPORT CSV GLOBAL
-    // ============================================================
     function exportCSV() {
         if (dossiers.length === 0) { alert('Aucune donnée à exporter.'); return; }
         const headers = ['ID', 'Service', 'Assuré', 'Véhicule', 'Type', 'Immatriculation', 'Sinistre', 'Assureur', 'Photo AVT TX', 'Photo AP TX', 'Date', 'Livraison', 'Expert', 'Montant Rapport', 'Rapport Validé', 'Montant Rapport Validé', 'Montant Devis', 'Commentaire', 'Statut'];
@@ -1808,9 +1717,7 @@
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    // ============================================================
     // IMPORT CSV
-    // ============================================================
     async function importCSV(event) {
         const file = event.target.files[0];
         if (!file) return;
