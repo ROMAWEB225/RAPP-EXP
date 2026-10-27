@@ -587,6 +587,7 @@
         .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .status-attente { background-color: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
         .status-cours { background-color: #e8f4fd; color: #2980b9; border: 1px solid #2980b9; }
+        .status-attente-accord { background-color: #f4ecf7; color: #8e44ad; border: 1px solid #8e44ad; }
         .status-valide { background-color: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto; }
@@ -741,12 +742,13 @@
         <div class="reporting-filters">
             <div class="form-group">
                 <label>Statut</label>
-                <select id="filtreStatutAnalyse">
-                    <option value="">-- Tous les statuts --</option>
-                    <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
-                    <option value="EN COURS TRAX">EN COURS TRAX</option>
-                    <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
-                </select>
+               <select id="filtreStatutAnalyse">
+                 <option value="">-- Tous les statuts --</option>
+                 <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+                 <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
+                 <option value="EN COURS TRVX">EN COURS TRVX</option>
+                 <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+               </select>
             </div>
             <div class="form-group">
                 <label>Filtrer par Expert</label>
@@ -837,11 +839,12 @@
 
     <div class="toolbar">
         <input type="text" id="searchInput" placeholder="🔍 Rechercher (Immat, Client, Sinistre...)">
-        <select id="filterStatut">
-            <option value="">Tous les statuts</option>
-            <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
-            <option value="EN COURS TRAX">En cours TRAX</option>
-            <option value="RAPPORT VALIDE">Rapport Validé</option>
+       <select id="filterStatut">
+         <option value="">Tous les statuts</option>
+         <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
+         <option value="EN ATTENTE D'ACCORD POUR TRVX">En attente d'accord pour TRVX</option>
+         <option value="EN COURS TRVX">En cours TRVX</option>
+         <option value="RAPPORT VALIDE">Rapport Validé</option>
         </select>
         <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Nouveau</button>
         <button class="btn-success" onclick="exportCSV()"><i class="fas fa-file-excel"></i> Exporter</button>
@@ -959,11 +962,12 @@
                 <div class="form-group"><label>Montant Devis (FCFA)</label><input type="number" id="montantDevis" value="0"></div>
                 <div class="form-group"><label>Commentaire</label><input type="text" id="commentaire"></div>
                 <div class="form-group"><label>Statut</label>
-                    <select id="statut">
-                        <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
-                        <option value="EN COURS TRAX">EN COURS TRAX</option>
-                        <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
-                    </select>
+                   <select id="statut">
+                    <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+                    <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
+                    <option value="EN COURS TRVX">EN COURS TRVX</option>
+                    <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+                   </select>
                 </div>
             </div>
             <div class="modal-actions">
@@ -1473,9 +1477,10 @@
             }
 
             let statusClass = 'status-attente';
-            if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
+            if (d.statut === 'EN COURS TRVX') statusClass = 'status-cours';
+            if (d.statut === "EN ATTENTE D'ACCORD POUR TRVX") statusClass = 'status-attente-accord';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
-
+            
             const deleteBtn = estAdmin() 
                 ? `<button class="btn-danger btn-sm" onclick="deleteDossier('${d.firebaseId}')"><i class="fas fa-trash"></i></button>` 
                 : '';
@@ -1585,8 +1590,9 @@
         dossiersAffiches.forEach((d, index) => {
             const tr = document.createElement('tr');
             let statusClass = 'status-attente';
-            if (d.statut === 'EN COURS TRAX') statusClass = 'status-cours';
-            if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
+           if (d.statut === 'EN COURS TRVX') statusClass = 'status-cours';
+           if (d.statut === "EN ATTENTE D'ACCORD POUR TRVX") statusClass = 'status-attente-accord';
+           if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
             const dateAffichee = d.date ? new Date(d.date).toLocaleDateString('fr-FR') : '-';
 
             tr.innerHTML = `
