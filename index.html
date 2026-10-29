@@ -748,7 +748,7 @@
                <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
                <option value="EN ATTENTE DE FICHE D'EXPERTISE">EN ATTENTE DE FICHE D'EXPERTISE</option>
                <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
-               <option value="EN COURS TRAX">EN COURS TRAX</option>
+               <option value="EN COURS TRVX">EN COURS TRVX</option>
                <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
             </select>
             </div>
@@ -846,7 +846,7 @@
          <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
          <option value="EN ATTENTE DE FICHE D'EXPERTISE">En attente de fiche d'expertise</option>
          <option value="EN ATTENTE D'ACCORD POUR TRVX">En attente d'accord pour TRVX</option>
-         <option value="EN COURS TRAX">En cours TRAX</option>
+         <option value="EN COURS TRVX">En cours TRVX</option>
          <option value="RAPPORT VALIDE">Rapport Validé</option>
       </select>
         <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Nouveau</button>
@@ -875,7 +875,7 @@
 </div>
 <div class="legende-item" style="font-size: 11px; color: #95a5a6;">
     <i class="fas fa-info-circle"></i>
-    <em>Alertes applicables aux statuts : En attente rapport, En attente fiche, En attente accord, En cours TRAX</em>
+    <em>Alertes applicables aux statuts : En attente rapport, En attente fiche, En attente accord, En cours TRVX</em>
 </div>
     </div>
 
@@ -973,7 +973,7 @@
                      <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
                      <option value="EN ATTENTE DE FICHE D'EXPERTISE">EN ATTENTE DE FICHE D'EXPERTISE</option>
                      <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
-                     <option value="EN COURS TRAX">EN COURS TRAX</option>
+                     <option value="EN COURS TRVX">EN COURS TRVX</option>
                      <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
                    </select>
                 </div>
@@ -1470,9 +1470,9 @@
                 const dateDossier = new Date(d.date);
                 const diffTime = Math.abs(today - dateDossier);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-              if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+              if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRVX')) {
                    alerteClass = 'alerte-rouge';
-                   } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+                   } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRVX')) {
                     alerteClass = 'alerte-orange';
                        }
                 }
@@ -1605,9 +1605,9 @@
            const dateDossier = new Date(d.date);
            const diffTime = Math.abs(today - dateDossier);
            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-           if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+           if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRVX')) {
             alerteClass = 'alerte-rouge';
-            } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+            } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRVX')) {
             alerteClass = 'alerte-orange';
                }
             }
