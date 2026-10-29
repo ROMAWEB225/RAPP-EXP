@@ -588,6 +588,7 @@
         .status-attente { background-color: #fef9e7; color: #f39c12; border: 1px solid #f39c12; }
         .status-cours { background-color: #e8f4fd; color: #2980b9; border: 1px solid #2980b9; }
         .status-attente-accord { background-color: #f4ecf7; color: #8e44ad; border: 1px solid #8e44ad; }
+        .status-attente-fiche { background-color: #fef5e7; color: #d35400; border: 1px solid #d35400; }
         .status-valide { background-color: #eafaf1; color: #27ae60; border: 1px solid #27ae60; }
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto; }
@@ -742,13 +743,14 @@
         <div class="reporting-filters">
             <div class="form-group">
                 <label>Statut</label>
-               <select id="filtreStatutAnalyse">
-                 <option value="">-- Tous les statuts --</option>
-                 <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
-                 <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
-                 <option value="EN COURS TRVX">EN COURS TRVX</option>
-                 <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
-               </select>
+            <select id="filtreStatutAnalyse">
+               <option value="">-- Tous les statuts --</option>
+               <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+               <option value="EN ATTENTE DE FICHE D'EXPERTISE">EN ATTENTE DE FICHE D'EXPERTISE</option>
+               <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
+               <option value="EN COURS TRAX">EN COURS TRAX</option>
+               <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+            </select>
             </div>
             <div class="form-group">
                 <label>Filtrer par Expert</label>
@@ -839,13 +841,14 @@
 
     <div class="toolbar">
         <input type="text" id="searchInput" placeholder="🔍 Rechercher (Immat, Client, Sinistre...)">
-       <select id="filterStatut">
+      <select id="filterStatut">
          <option value="">Tous les statuts</option>
          <option value="EN ATTENTE DE RAPPORT">En attente de rapport</option>
+         <option value="EN ATTENTE DE FICHE D'EXPERTISE">En attente de fiche d'expertise</option>
          <option value="EN ATTENTE D'ACCORD POUR TRVX">En attente d'accord pour TRVX</option>
-         <option value="EN COURS TRVX">En cours TRVX</option>
+         <option value="EN COURS TRAX">En cours TRAX</option>
          <option value="RAPPORT VALIDE">Rapport Validé</option>
-        </select>
+      </select>
         <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Nouveau</button>
         <button class="btn-success" onclick="exportCSV()"><i class="fas fa-file-excel"></i> Exporter</button>
         <button class="btn-warning" onclick="document.getElementById('importFile').click()"><i class="fas fa-file-import"></i> Importer</button>
@@ -856,20 +859,24 @@
 
     <div class="legende-couleurs">
         <div class="legende-titre">
-            <i class="fas fa-info-circle"></i> Signification des couleurs :
-        </div>
-        <div class="legende-item">
-            <span class="legende-pastille orange"></span>
-            <span>Orange : En attente depuis <strong>plus de 15 jours</strong></span>
-        </div>
-        <div class="legende-item">
-            <span class="legende-pastille rouge"></span>
-            <span>Rouge : En attente depuis <strong>plus de 30 jours</strong></span>
-        </div>
-        <div class="legende-item">
-            <span class="legende-pastille normal"></span>
-            <span>Normal : Dossier récent ou déjà validé</span>
-        </div>
+    <i class="fas fa-info-circle"></i> Signification des couleurs :
+</div>
+<div class="legende-item">
+    <span class="legende-pastille orange"></span>
+    <span>Orange : En attente depuis <strong>plus de 15 jours</strong></span>
+</div>
+<div class="legende-item">
+    <span class="legende-pastille rouge"></span>
+    <span>Rouge : En attente depuis <strong>plus de 30 jours</strong></span>
+</div>
+<div class="legende-item">
+    <span class="legende-pastille normal"></span>
+    <span>Normal : Dossier récent ou déjà validé</span>
+</div>
+<div class="legende-item" style="font-size: 11px; color: #95a5a6;">
+    <i class="fas fa-info-circle"></i>
+    <em>Alertes applicables aux statuts : En attente rapport, En attente fiche, En attente accord, En cours TRAX</em>
+</div>
     </div>
 
     <div class="tri-bar">
@@ -963,10 +970,11 @@
                 <div class="form-group"><label>Commentaire</label><input type="text" id="commentaire"></div>
                 <div class="form-group"><label>Statut</label>
                    <select id="statut">
-                    <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
-                    <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
-                    <option value="EN COURS TRVX">EN COURS TRVX</option>
-                    <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
+                     <option value="EN ATTENTE DE RAPPORT">EN ATTENTE DE RAPPORT</option>
+                     <option value="EN ATTENTE DE FICHE D'EXPERTISE">EN ATTENTE DE FICHE D'EXPERTISE</option>
+                     <option value="EN ATTENTE D'ACCORD POUR TRVX">EN ATTENTE D'ACCORD POUR TRVX</option>
+                     <option value="EN COURS TRAX">EN COURS TRAX</option>
+                     <option value="RAPPORT VALIDE">RAPPORT VALIDE</option>
                    </select>
                 </div>
             </div>
@@ -1462,12 +1470,12 @@
                 const dateDossier = new Date(d.date);
                 const diffTime = Math.abs(today - dateDossier);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === 'EN COURS TRAX')) {
-                    alerteClass = 'alerte-rouge';
-                } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === 'EN COURS TRAX')) {
+              if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+                   alerteClass = 'alerte-rouge';
+                   } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
                     alerteClass = 'alerte-orange';
+                       }
                 }
-            }
 
             tr.className = alerteClass;
             
@@ -1478,6 +1486,7 @@
 
             let statusClass = 'status-attente';
             if (d.statut === 'EN COURS TRVX') statusClass = 'status-cours';
+            if (d.statut === "EN ATTENTE DE FICHE D'EXPERTISE") statusClass = 'status-attente-fiche';
             if (d.statut === "EN ATTENTE D'ACCORD POUR TRVX") statusClass = 'status-attente-accord';
             if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
             
@@ -1589,8 +1598,24 @@
 
         dossiersAffiches.forEach((d, index) => {
             const tr = document.createElement('tr');
+            // 🆕 Ajouter les alertes couleurs
+            const today = new Date();
+             let alerteClass = '';
+            if (d.date) {
+           const dateDossier = new Date(d.date);
+           const diffTime = Math.abs(today - dateDossier);
+           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+           if (diffDays > 30 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+            alerteClass = 'alerte-rouge';
+            } else if (diffDays > 15 && (d.statut === 'EN ATTENTE DE RAPPORT' || d.statut === "EN ATTENTE DE FICHE D'EXPERTISE" || d.statut === "EN ATTENTE D'ACCORD POUR TRVX" || d.statut === 'EN COURS TRAX')) {
+            alerteClass = 'alerte-orange';
+               }
+            }
+           tr.className = alerteClass;
+            
             let statusClass = 'status-attente';
            if (d.statut === 'EN COURS TRVX') statusClass = 'status-cours';
+           if (d.statut === "EN ATTENTE DE FICHE D'EXPERTISE") statusClass = 'status-attente-fiche';
            if (d.statut === "EN ATTENTE D'ACCORD POUR TRVX") statusClass = 'status-attente-accord';
            if (d.statut === 'RAPPORT VALIDE') statusClass = 'status-valide';
             const dateAffichee = d.date ? new Date(d.date).toLocaleDateString('fr-FR') : '-';
